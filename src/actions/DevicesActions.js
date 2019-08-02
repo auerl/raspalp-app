@@ -9,7 +9,6 @@ import { ApiCall } from '../network/ApiUtils';
 
 export const getUserDevices = (token) => (dispatch) => {
   dispatch({ type: DEVICES });
-  console.log(USER_LIST_DEVICES_ENDPOINT);
   const devices = ApiCall(
     USER_LIST_DEVICES_ENDPOINT,
     'GET',

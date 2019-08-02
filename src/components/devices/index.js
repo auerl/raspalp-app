@@ -88,7 +88,6 @@ class Devices extends Component {
 const mapStateToProps = state => ({
     devicesList: state.devices.data,
     loading: state.devices.loading,
-    loginUser: state.devices.loginUser,
     userToken: state.login.userToken,
 });
 export default connect(mapStateToProps, { getUserDevices })(Devices);

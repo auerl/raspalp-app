@@ -1,7 +1,7 @@
 import {
-  PLANETS,
-  PLANETS_SUCCESS,
-  PLANETS_FAIL,
+  FRIENDS,
+  FRIENDS_SUCCESS,
+  FRIENDS_FAIL,
 } from '../actions/types';
 
 const INITIAL_STATE = {
@@ -12,13 +12,12 @@ const INITIAL_STATE = {
 
 export default (state = INITIAL_STATE, action) => {
   switch (action.type) {
-    //Plannets 
-    case PLANETS:
-      return { ...state, loading: true, message: 'Planet list loading' };
-    case PLANETS_SUCCESS:
+    case FRIENDS:
+      return { ...state, loading: true, message: 'Friends list loading' };
+    case FRIENDS_SUCCESS:
       return { ...state, ...INITIAL_STATE, data: action.payload };
-    case PLANETS_FAIL:
-      return { ...state, message: 'Plannet list data could not fatch!', loading: false };
+    case FRIENDS_FAIL:
+      return { ...state, message: 'Friends list could not be retrieved!', loading: false };
 
     default:
       return state;

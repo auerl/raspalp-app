@@ -3,14 +3,14 @@ import LoginReducer from './LoginReducer';
 import RegisterReducer from './RegisterReducer';
 import DevicesReducer from './DevicesReducer';
 import DeviceDataReducer from './DeviceDataReducer';
-import PlanetsReducer from './PlanetsReducer';
-import PlanetDetailsReducer from './PlanetDetailsReducer';
+import FriendsReducer from './FriendsReducer';
+import FriendDetailsReducer from './FriendDetailsReducer';
 
 export default combineReducers({
   login: LoginReducer,
   register: RegisterReducer,
-  planets: PlanetsReducer,
   devices: DevicesReducer,
   deviceData: DeviceDataReducer,
-  planetDetails: PlanetDetailsReducer,
+  friends: FriendsReducer,
+  friendDetails: FriendDetailsReducer,
 });

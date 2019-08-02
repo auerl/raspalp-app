@@ -18,7 +18,6 @@ export const deviceDataAction = (device_id, token, type, from_utc, to_utc) => (d
 
 const onDataSuccess = (dispatch, response) => {
   if (response && response.meta.code === 200 ) {
-    console.log(response.data)
     dispatch({
       type: DEVICE_DATA_SUCCESS,
       payload: response.data || {}

@@ -14,15 +14,12 @@ export const CallAPI = (requireConfig = {}, onSuccess, onError) => {
 };
 
 export const ApiCall = (url, method, payload={}, extraHeaders={}, onSuccess, onError) => {
-  console.log("yas");
-  console.log(extraHeaders)
   let data = {
     method: method,
     headers: {
       ...extraHeaders,
     },
   }
-  console.log(data)
   // get doesn't allow to send a body
   if (method != 'GET') {
     data.body = JSON.stringify(payload);

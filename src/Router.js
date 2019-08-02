@@ -6,15 +6,15 @@ import Register from './components/auth/register';
 import Tasks from './components/tasks'
 import Devices from './components/devices';
 import Settings from './components/settings';
-import PlanetDetails from './components/details';
+import FriendDetails from './components/friends/details';
 import DeviceData from './components/data';
-import Search from './components/search'
+import Friends from './components/friends'
 
 import {
   TITLE_SIGNIN_SIGNUP,
   TITLE_LOGIN,
   TITLE_REGISTER,
-  TITLE_SEARCH,
+  TITLE_FRIENDS,
   TITLE_TASKS,
   TITLE_DEVICES,
   TITLE_SETTINGS,
@@ -74,11 +74,11 @@ const RouterComponent = () => {
             title={TITLE_TASKS}
           />
           <Scene
-            key="search"
+            key="friends"
             image={require('../assets/avatar.png')}
             icon={TabIcon}
-            component={Search}
-            title={TITLE_SEARCH}
+            component={Friends}
+            title={TITLE_FRIENDS}
           />
           <Scene
             key="settings"
@@ -91,10 +91,10 @@ const RouterComponent = () => {
           />
         </Scene>
         <Scene
-          key="planetDetails"
+          key="friendDetails"
           backTitle={BACK}
-          component={PlanetDetails}
-          title={TITLE_SEARCH}
+          component={FriendDetails}
+          title={TITLE_FRIENDS}
         />
         <Scene
           key="deviceData"

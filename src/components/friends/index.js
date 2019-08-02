@@ -2,15 +2,15 @@ import React, { Component } from 'react';
 import { View, Text, TextInput, FlatList } from 'react-native';
 import { connect } from 'react-redux';
 import { Actions } from 'react-native-router-flux';
-import { searchPlanets } from '../../actions/PlanetActions';
+import { searchFriends } from '../../actions/FriendsActions';
 import { Spinner } from '../common';
 import { Item } from './Item';
-import { planetStyle, itemStyle } from './style'
+import { friendsStyle, itemStyle } from './style'
 
 
 import { ListItem } from 'react-native-elements'
 
-class Search extends Component {
+class Friends extends Component {
 
     constructor(props) {
         super(props);
@@ -21,23 +21,23 @@ class Search extends Component {
     }
 
     componentDidMount() {
-        this.props.searchPlanets('');
+        this.props.searchFriends(this.props.userToken, '');
     }
 
     onSearchTextChange = (text) => {
         if (text !== this.state.searchText) {
             this.setState({ searchText: text, isTypeAheadSearch: (text.length > 2) });
         }
-        this.props.searchPlanets(this.state.searchText);
+        this.props.searchFriends(this.props.userToken, this.state.searchText);
     }
 
     onSearchSubmit = () => {
-        this.props.searchPlanets(this.state.searchText);
+        this.props.searchFriends(this.props.userToken, this.state.searchText);
         this.setState({ isTypeAheadSearch: false });
     }
 
     onPressItem = (item) => {
-        Actions.planetDetails({ item, title: item.name });
+        Actions.friendDetails({ item, title: item.name });
     }
 
     keyExtractor = (item, index) => index.toString()
@@ -47,7 +47,7 @@ class Search extends Component {
             return <Spinner size="large" />;
         }
         return <FlatList
-                 data={this.props.planetSearch}
+                 data={this.props.friendsSearch}
                  renderItem={this.renderItem}
                  keyExtractor={this.keyExtractor}
                  ItemSeparatorComponent={this.renderSeparator}
@@ -70,15 +70,15 @@ class Search extends Component {
     renderItem = ({ item }) => {
         return (
             <ListItem
-              title={item.name}
-              subtitle={item.terrain}
+              title={item.username}
+              subtitle={item.email}
               leftAvatar={{ source: require("../../../assets/profile.png"), rounded: true }}
               onPress={() => this.onPressItem(item)}
             />)
     }
 
     render() {
-        const { containerStyle, searchViewStyle, loginText } = planetStyle;
+        const { containerStyle, searchViewStyle } = friendsStyle;
         return (
             <View style={containerStyle}>
                 <View style={searchViewStyle}>
@@ -100,8 +100,8 @@ class Search extends Component {
 }
 
 const mapStateToProps = state => ({
-    planetSearch: state.planets.data,
-    loading: state.planets.loading,
-    loginUser: state.login.loginUser,
+    friendsSearch: state.friends.data,
+    loading: state.friends.loading,
+    userToken: state.login.userToken,
 });
-export default connect(mapStateToProps, { searchPlanets })(Search);
+export default connect(mapStateToProps, { searchFriends })(Friends);

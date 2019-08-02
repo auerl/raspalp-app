@@ -1,10 +1,10 @@
-export const PLANETS_SUCCESS = 'planet_list_success';
-export const PLANETS_FAIL = 'planet_list_fail';
-export const PLANETS = 'planet_list';
+export const FRIENDS_SUCCESS = 'friend_list_success';
+export const FRIENDS_FAIL = 'friend_list_fail';
+export const FRIENDS = 'friend_list';
 
-export const PLANET_DETAILS_SUCCESS = 'planet_details_success';
-export const PLANET_DETAILS_FAIL = 'planet_details_fail';
-export const PLANET_DETAILS = 'planet_details';
+export const FRIEND_DETAILS_SUCCESS = 'friend_details_success';
+export const FRIEND_DETAILS_FAIL = 'friend_details_fail';
+export const FRIEND_DETAILS = 'friend_details';
 
 export const DEVICE_DATA_SUCCESS = 'device_data_success';
 export const DEVICE_DATA_FAIL = 'device_data_fail';

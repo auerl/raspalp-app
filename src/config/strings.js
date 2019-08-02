@@ -4,7 +4,7 @@
 export const TITLE_SIGNIN_SIGNUP = 'Splash';
 export const TITLE_LOGIN = 'Login';
 export const TITLE_REGISTER = 'Registrierung';
-export const TITLE_SEARCH = 'User';
+export const TITLE_FRIENDS = 'Freunde';
 export const TITLE_TASKS = 'Tasks';
 export const TITLE_DEVICES = 'Geräte';
 export const TITLE_SETTINGS = 'Einstellungen';
