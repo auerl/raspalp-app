@@ -68,7 +68,7 @@ const RouterComponent = () => {
           />
           <Scene
             key="tasks"
-            image={require('../assets/monitor.png')}
+            image={require('../assets/vector.png')}
             icon={TabIcon}
             component={Tasks}
             title={TITLE_TASKS}
