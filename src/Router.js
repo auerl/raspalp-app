@@ -1,5 +1,6 @@
 import React from 'react';
 import { Scene, Router, Actions, ActionConst } from 'react-native-router-flux';
+
 import SignInSignUp from './components/auth';
 import Login from './components/auth/login';
 import Register from './components/auth/register';
@@ -8,7 +9,7 @@ import Devices from './components/devices';
 import Settings from './components/settings';
 import FriendDetails from './components/friends/details';
 import DeviceData from './components/data';
-import Friends from './components/friends'
+import Friends from './components/friends';
 
 import {
   TITLE_SIGNIN_SIGNUP,
@@ -24,6 +25,7 @@ import {
 } from './config/strings';
 
 import {
+  StyleSheet,
   Component,
   Image,
   View
@@ -41,9 +43,19 @@ const TabIcon = ({ selected, title, image }) => {
   )
 }
 
+const styles = StyleSheet.create({
+  navBar: {
+    backgroundColor: '#c4c4c4', // changing navbar color
+  },
+  navTitle: {
+    fontFamily: 'Roboto',
+    color: 'white'
+  },
+})
+
 const RouterComponent = () => {
   return (
-    <Router>
+    <Router navigationBarStyle={styles.navBar} titleStyle={styles.navTitle}>
       <Scene>
         <Scene key="loginregister"
           component={SignInSignUp}
@@ -106,5 +118,6 @@ const RouterComponent = () => {
     </Router>
   );
 };
+
 
 export default RouterComponent;

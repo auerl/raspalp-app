@@ -63,7 +63,7 @@ class Devices extends Component {
             <ListItem
               title={item.name}
               subtitle={"(" + item.device_id + ") " + item.serial_number}
-              leftAvatar={{ source: require("../../../assets/avatar.jpg"), rounded: true }}
+              leftAvatar={{ source: require("../../../assets/device.png"), rounded: true }}
               onPress={() => this.onPressItem(item)}
             />)
     }
