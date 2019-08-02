@@ -46,6 +46,7 @@ export const friendsStyle = {
     titleText: {
         fontWeight: 'bold',
         fontSize: SIZE_LARGE,
+        fontFamily: 'Roboto',
         paddingLeft: 15,
         paddingRight: 10,
         paddingBottom: 3,
