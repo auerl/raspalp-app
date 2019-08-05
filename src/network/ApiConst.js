@@ -7,3 +7,6 @@ export const USER_LIST_DEVICES_ENDPOINT = `${RALP_API_BASE_URL}/users/listDevice
 export const USER_BASE_DATA_ENDPOINT = `${RALP_API_BASE_URL}/data/`;
 export const USER_LIST_USERS_ENDPOINT= `${RALP_API_BASE_URL}/users`;
 export const USER_DETAILS_ENDPOINT= `${RALP_API_BASE_URL}/users/`;
+
+export const DEVICE_ADD_ENDPOINT= `${RALP_API_BASE_URL}/users/registerDevice`;
+export const DEVICE_REGISTER_ENDPOINT= `${RALP_API_BASE_URL}/devices`;

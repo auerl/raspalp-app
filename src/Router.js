@@ -10,6 +10,7 @@ import Settings from './components/settings';
 import FriendDetails from './components/friends/details';
 import DeviceData from './components/data';
 import Friends from './components/friends';
+import QRCode from './components/qrcode';
 
 import {
   TITLE_SIGNIN_SIGNUP,
@@ -20,6 +21,7 @@ import {
   TITLE_DEVICES,
   TITLE_SETTINGS,
   TITLE_DATA,
+  TITLE_QRCODE,
   LOGOUT,
   BACK,
 } from './config/strings';
@@ -113,6 +115,12 @@ const RouterComponent = () => {
           backTitle={BACK}
           component={DeviceData}
           title={TITLE_DATA}
+        />
+        <Scene
+          key="QRCode"
+          backTitle={BACK}
+          component={QRCode}
+          title={TITLE_QRCODE}
         />
       </Scene>
     </Router>

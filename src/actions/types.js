@@ -22,3 +22,13 @@ export const SIGNUP_FAIL = 'auth_fail';
 export const DEVICES_SUCCESS = 'devices_list_success';
 export const DEVICES_FAIL = 'devices_list_fail';
 export const DEVICES = 'devices_list';
+
+export const DEVICE_ADD_FAIL = 'device_add_fail'
+export const DEVICE_ADD_SUCCESS = 'device_add_success'
+export const DEVICE_ADD_LOADING = 'device_add_loading'
+export const DEVICE_ADD_FAIL_ALREADY_ADDED = 'device_add_fail_already_ADDED'
+export const DEVICE_ADD_FAIL_NOT_FOUND = 'device_add_fail_not_found'
+
+export const DEVICE_REGISTER_FAIL = 'device_register_fail'
+export const DEVICE_REGISTER_SUCCESS = 'device_register_success'
+export const DEVICE_REGISTER_LOADING = 'device_register_loading'

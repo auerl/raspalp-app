@@ -12,23 +12,24 @@ import { ListItem } from 'react-native-elements'
 class Devices extends Component {
 
     constructor(props) {
-        super(props);
-        this.state = {
-            searchText: '',
-            isTypeAheadSearch: false,
-        };
+      super(props);
+      this.state = {
+        searchText: '',
+        isTypeAheadSearch: false,
+      };
     }
 
     componentDidMount() {
-        this.props.getUserDevices(this.props.userToken);
+      this.props.getUserDevices(this.props.userToken);
     }
 
     onPressItem = (item) => {
-        Actions.deviceData({ item, title: item.name });
+      Actions.deviceData({ item, title: item.name });
     }
 
     onAddButtonPress() {
-        console.log("button pressed");
+      console.log("button pressed");
+      Actions.QRCode();
     }
 
     keyExtractor = (item, index) => index.toString()
