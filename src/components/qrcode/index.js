@@ -32,6 +32,7 @@ class QRCode extends Component {
     deviceSerialNumber: '',
     devicePassword: '',
     deviceToken: '',
+    deviceAdded: false,
     scanned: false,
     needToRegister: false,
     message: ''
@@ -64,8 +65,14 @@ class QRCode extends Component {
   }
 
   componentWillReceiveProps(nextProps) {
-    if(this.props.deviceSerialNumber){
-      this.props.addDeviceToUser(this.props.userToken, this.props.deviceSerialNumber)
+    if (nextProps.deviceAdded) {
+      Alert.alert(
+        "Info", "Gerät hinzugefügt!",
+        [{ text: OK, onPress: () => Actions.dashboard({ type: ActionConst.RESET }), style: 'cancel' }],
+        { cancelable: false },
+      );
+    } else if(this.props.deviceSerialNumber){
+      this.props.addDeviceToUser(this.props.userToken, this.props.deviceSerialNumber);
     } else if (nextProps.error && nextProps.error == 'deviceNotFound') {
       this.setState({ needToRegister: true })
       Alert.alert(
@@ -166,6 +173,7 @@ const mapStateToProps = state => ({
   deviceToken: state.qrcode.deviceToken,
   devicePassword: state.qrcode.devicePassword,
   deviceSerialNumber: state.qrcode.deviceSerialNumber,
+  deviceAdded: state.qrcode.deviceAdded,
   userToken: state.login.userToken,
   loading: state.qrcode.loading,
   message: state.qrcode.message,

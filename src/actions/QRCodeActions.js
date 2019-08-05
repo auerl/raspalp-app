@@ -37,8 +37,6 @@ const onDeviceAddSuccess = (dispatch, response) => {
     dispatch({ type: DEVICE_ADD_SUCCESS });
     console.log('Sucessfully added device: ', response);
   } else if (response.meta && response.meta.code === 24 ){
-    // even though the request failed, we proceed as if it was sucessful
-    // as the device is already registered
     dispatch({ type: DEVICE_ADD_FAIL_ALREADY_ADDED });
     console.log('Device already registered: ', response);
   } else if (response.meta && response.meta.code === 23 ){

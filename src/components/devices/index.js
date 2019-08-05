@@ -74,7 +74,7 @@ class Devices extends Component {
         return (
             <View style={containerStyle}>
                 {this.renderLoading()}
-              <View style={{width: "60%", alignSelf: "center"}}>
+              <View style={{width: "60%", alignSelf: "center", marginTop: 15}}>
                 <Button
                   title="Hinzufügen"
                   style={devicesStyle.buttonStyle}

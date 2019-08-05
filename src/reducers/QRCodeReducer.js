@@ -25,14 +25,14 @@ const INITIAL_STATE = {
   username: '',
   password:'',
   error: '',
-  added: false,
+  deviceAdded: false,
 };
 
 export default (state = INITIAL_STATE, action) => {
   switch (action.type) {
 
     case DEVICE_ADD_SUCCESS:
-      return { ...state, ...INITIAL_STATE, added: true};
+      return { ...state, ...INITIAL_STATE, deviceAdded: true};
     case DEVICE_ADD_LOADING:
       return { ...state, ...INITIAL_STATE, loading:true};
     case DEVICE_ADD_FAIL_ALREADY_ADDED:
