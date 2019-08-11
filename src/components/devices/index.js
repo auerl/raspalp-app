@@ -76,7 +76,7 @@ class Devices extends Component {
                 {this.renderLoading()}
               <View style={{width: "60%", alignSelf: "center"}}>
                 <Button
-                  title="Hinzufügen"
+                  title="Sensor Aktivieren"
                   style={devicesStyle.buttonStyle}
                   onPress={this.onAddButtonPress}>
                 </Button>

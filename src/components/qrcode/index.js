@@ -10,7 +10,7 @@ import { Card, CardSection, Input, Spinner } from '../common';
 
 import { Actions, ActionConst } from 'react-native-router-flux';
 
-import { addDeviceToUser, registerDeviceAccount } from '../../actions/QRCodeActions';
+import { addDeviceToUser, registerDeviceAccount, loginAsDevice, setupDeviceWifi, setupDeviceToken } from '../../actions/QRCodeActions';
 
 import {
   DEVICE_NAME,
@@ -32,9 +32,13 @@ class QRCode extends Component {
     deviceSerialNumber: '',
     devicePassword: '',
     deviceToken: '',
+    deviceWifiSSID: '',
+    deviceWifiPass: '',
     deviceAdded: false,
     scanned: false,
     needToRegister: false,
+    needToSetup: false,
+    needToLogin: false,
     message: ''
   };
 
@@ -56,22 +60,45 @@ class QRCode extends Component {
     if (deviceName.length && deviceSerialNumber.length && devicePassword.length) {
       this.props.registerDeviceAccount(deviceName, deviceSerialNumber, devicePassword);
       this.props.addDeviceToUser(this.props.userToken, deviceSerialNumber);
+      this.props.loginAsDevice(deviceSerialNumber, devicePassword);
       Alert.alert(
         "Info", "Gerät erfolgreich hinzugefügt!",
+        [{ text: OK, onPress: () => this.onPressOK(), style: 'cancel' }],
+        { cancelable: false },
+      );
+    }
+  }
+
+  onSetupButtonPress = () => {
+    const { deviceWifiSSID, deviceWifiPass } = this.state;
+    console.log( this.props.deviceToken, deviceWifiSSID, deviceWifiPass);
+    if (deviceWifiSSID.length && deviceWifiPass.length) {
+      this.props.setupDeviceWifi(deviceWifiSSID, deviceWifiPass);
+      this.props.setupDeviceToken(this.props.deviceToken);
+      Alert.alert(
+        "Info", "Gerät erfolgreich konfiguriert! Verbinden Sie sich jetzt wieder mit dem Umgebungs-WLAN!",
         [{ text: OK, onPress: () => Actions.dashboard({ type: ActionConst.RESET }), style: 'cancel' }],
         { cancelable: false },
       );
     }
   }
 
+  onRepeatSetupButtonPress = () => {
+    const { deviceSerialNumber, devicePassword } = this.state;
+    if (deviceSerialNumber.length && devicePassword.length) {
+      this.props.loginAsDevice(deviceSerialNumber, devicePassword);
+    }
+  }
+
   componentWillReceiveProps(nextProps) {
-    if (nextProps.deviceAdded) {
-      Alert.alert(
-        "Info", "Gerät hinzugefügt!",
-        [{ text: OK, onPress: () => Actions.dashboard({ type: ActionConst.RESET }), style: 'cancel' }],
-        { cancelable: false },
-      );
-    } else if(this.props.deviceSerialNumber){
+    // if (nextProps.deviceAdded) {
+    //   Alert.alert(
+    //     "Info", "Gerät hinzugefügt!",
+    //     [{ text: OK, onPress: () => Actions.dashboard({ type: ActionConst.RESET }), style: 'cancel' }],
+    //     { cancelable: false },
+    //   );
+    // } else
+    if (nextProps.deviceSerialNumber){
       this.props.addDeviceToUser(this.props.userToken, this.props.deviceSerialNumber);
     } else if (nextProps.error && nextProps.error == 'deviceNotFound') {
       this.setState({ needToRegister: true })
@@ -80,12 +107,13 @@ class QRCode extends Component {
         [{ text: OK, onPress: () => this.onPressOK(), style: 'cancel' }],
         { cancelable: false },
       );
-    } else if (nextProps.registered && this.props.deviceSerialNumber) {
+    } else if (nextProps.registered && nextProps.registered == true && this.props.deviceSerialNumber) {
       this.props.addDeviceToUser(this.props.userToken, this.props.deviceSerialNumber)
     } else if (nextProps.error && nextProps.error == 'deviceAlreadyAdded') {
       Alert.alert(
         "Info", "Gerät bereits hinzugefügt!",
-        [{ text: OK, onPress: () => Actions.dashboard({ type: ActionConst.RESET }), style: 'cancel' }],
+        [{ text: "Zurück", onPress: () => Actions.dashboard({ type: ActionConst.RESET }), style: 'cancel' },
+         { text: "Erneut aktivieren", onPress: () => this.setState({ needToRegister: false, needToLogin: true, needToSetup: false}), style: 'cancel' }],
         { cancelable: false },
       );
     } else if (nextProps.error && nextProps.error == 'registrationFailed') {
@@ -94,11 +122,37 @@ class QRCode extends Component {
         [{ text: OK, onPress: () => this.onPressOK(), style: 'cancel' }],
         { cancelable: false },
       );
+    } else if (nextProps.error && nextProps.error == 'loginFailed') {
+      Alert.alert(
+        "Fehler", "Login fehlgeschlagen!",
+        [{ text: OK, onPress: () => this.onPressOK(), style: 'cancel' }],
+        { cancelable: false },
+      );
+    } else if (nextProps.error && nextProps.error == 'setupFailed') {
+      Alert.alert(
+        "Fehler", "Setup fehlgeschlagen! Prüfen Sie die Verbindung mit dem Netzwerk RASPI!",
+        [{ text: OK, onPress: () => this.onPressOK(), style: 'cancel' }],
+        { cancelable: false },
+      );
+    } else if (nextProps.deviceToken || nextProps.error == 'setupFailed') {
+      this.setState(
+        {
+          deviceToken: nextProps.deviceToken,
+          needToRegister: false,
+          needToSetup: true,
+          needToLogin: false
+        }
+      )
+      Alert.alert(
+        "Info", "Verbinde dich bitte mit dem Netzwerk RASPALP oder stelle sicher dass du im selben Netzwerk bist und drücke danach auf OK!",
+        [{ text: OK, onPress: () => this.onPressOK(), style: 'cancel' }],
+        { cancelable: false },
+      );
     }
   }
 
   render() {
-    const { hasCameraPermission, scanned, needToRegister } = this.state;
+    const { hasCameraPermission, scanned, needToRegister, needToSetup, needToLogin } = this.state;
     return (
       <View
         style={{
@@ -113,7 +167,7 @@ class QRCode extends Component {
           />
         )}
         {scanned && (
-          <Button title={'Tap to Scan Again'} onPress={() => this.setState({ scanned: false, needToRegister: false })} />
+          <Button title={'Tap to Scan Again'} onPress={() => this.setState({ scanned: false, needToRegister: false, needToLogin: false, needToSetup: false })} />
         )}
         {needToRegister && (
           <View style={qrcodeStyle.containerStyle}>
@@ -130,8 +184,9 @@ class QRCode extends Component {
                 <Input
                   label={DEVICE_SERIAL_NUMBER}
                   placeholder={H_DEVICE_SERIAL_NUMBER}
+                  editable={false}
                   value={this.state.deviceSerialNumber}
-                  onChangeText={text => this.setState({ deviceName: text })}
+                  onChangeText={text => this.setState({ deviceSerialNumber: text })}
                 />
               </CardSection>
               <CardSection>
@@ -156,6 +211,73 @@ class QRCode extends Component {
             </View>
           </View>
         )}
+        {needToLogin && (
+          <View style={qrcodeStyle.containerStyle}>
+            <Card>
+              <CardSection>
+                <Input
+                  label={DEVICE_SERIAL_NUMBER}
+                  placeholder={H_DEVICE_SERIAL_NUMBER}
+                  editable={false}
+                  value={this.state.deviceSerialNumber}
+                  onChangeText={text => this.setState({ deviceSerialNumber: text })}
+                />
+              </CardSection>
+              <CardSection>
+                <Input
+                  secureTextEntry
+                  label={DEVICE_PASSWORD}
+                  placeholder={H_DEVICE_PASSWORD}
+                  value={this.state.devicePassword}
+                  onChangeText={text => this.setState({ devicePassword: text })}
+                />
+              </CardSection>
+            </Card>
+            <Text style={qrcodeStyle.errorTextStyle}>
+              {this.props.message}
+            </Text>
+            <View style={{width: "60%", alignSelf: "center"}}>
+              <Button
+                title="Einloggen"
+                style={qrcodeStyle.buttonStyle}
+                onPress={this.onRepeatSetupButtonPress}>
+              </Button>
+            </View>
+          </View>
+        )}
+        {needToSetup && (
+          <View style={qrcodeStyle.containerStyle}>
+            <Card>
+              <CardSection>
+                <Input
+                  label="WLAN Name"
+                  placeholder="SSID"
+                  value={this.state.deviceWifiSSID}
+                  onChangeText={text => this.setState({ deviceWifiSSID: text })}
+                />
+              </CardSection>
+              <CardSection>
+                <Input
+                  secureTextEntry
+                  label="WLAN Passwort"
+                  placeholder="Passwort"
+                  value={this.state.deviceWifiPass}
+                  onChangeText={text => this.setState({ deviceWifiPass: text })}
+                />
+              </CardSection>
+            </Card>
+            <Text style={qrcodeStyle.errorTextStyle}>
+              {this.props.message}
+            </Text>
+            <View style={{width: "60%", alignSelf: "center"}}>
+              <Button
+                title="Konfigurieren"
+                style={qrcodeStyle.buttonStyle}
+                onPress={this.onSetupButtonPress}>
+              </Button>
+            </View>
+          </View>
+        )}
       </View>
     );
   }
@@ -174,6 +296,8 @@ const mapStateToProps = state => ({
   devicePassword: state.qrcode.devicePassword,
   deviceSerialNumber: state.qrcode.deviceSerialNumber,
   deviceAdded: state.qrcode.deviceAdded,
+  deviceWifiSSID: state.qrcode.deviceWifiSSID,
+  deviceWifiPass: state.qrcode.deviceWifiPass,
   userToken: state.login.userToken,
   loading: state.qrcode.loading,
   message: state.qrcode.message,
@@ -183,4 +307,4 @@ const mapStateToProps = state => ({
 });
 
 
-export default connect(mapStateToProps, { addDeviceToUser, registerDeviceAccount })(QRCode);
+export default connect(mapStateToProps, { addDeviceToUser, registerDeviceAccount, loginAsDevice, setupDeviceWifi, setupDeviceToken })(QRCode);

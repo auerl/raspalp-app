@@ -32,3 +32,11 @@ export const DEVICE_ADD_FAIL_NOT_FOUND = 'device_add_fail_not_found'
 export const DEVICE_REGISTER_FAIL = 'device_register_fail'
 export const DEVICE_REGISTER_SUCCESS = 'device_register_success'
 export const DEVICE_REGISTER_LOADING = 'device_register_loading'
+
+export const DEVICE_LOGIN_FAIL = 'device_login_fail'
+export const DEVICE_LOGIN_SUCCESS = 'device_login_success'
+export const DEVICE_LOGIN_LOADING = 'device_login_loading'
+
+export const DEVICE_SETUP_FAIL = 'device_setup_fail'
+export const DEVICE_SETUP_SUCCESS = 'device_setup_success'
+export const DEVICE_SETUP_LOADING = 'device_setup_loading'

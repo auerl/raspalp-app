@@ -54,10 +54,10 @@ class Login extends Component {
 
   onButtonPress = () => {
     const { email, password } = this.state;
-    // if (email.length && password.length) {
-    //   const resp = this.props.loginToUserAccount(email, password);
-    // }
-    const resp = this.props.loginToUserAccount('ludwig.auer@gmail.com','test1234');
+    if (email.length && password.length) {
+      const resp = this.props.loginToUserAccount(email, password);
+    }
+    //const resp = this.props.loginToUserAccount('ludwig.auer@gmail.com','test1234');
   }
 
   onPressOK = () => {
