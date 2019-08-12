@@ -57,7 +57,7 @@ class Login extends Component {
     if (email.length && password.length) {
       const resp = this.props.loginToUserAccount(email, password);
     }
-    //const resp = this.props.loginToUserAccount('ludwig.auer@gmail.com','test1234');
+    const resp = this.props.loginToUserAccount('snodup@bluewin.ch','test1234');
   }
 
   onPressOK = () => {

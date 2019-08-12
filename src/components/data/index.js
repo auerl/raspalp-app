@@ -5,7 +5,7 @@ import { Actions } from 'react-native-router-flux';
 import { deviceDataAction } from '../../actions/DeviceDataActions';
 import { Card, CardSection, Spinner } from '../common';
 import { dataStyle, itemStyle } from './style'
-import { utcToIso } from '../../utils/time'
+import { utcToIso, utcToTime } from '../../utils/time'
 
 import {
     PieChart,
@@ -16,43 +16,105 @@ import {
 } from 'react-native-chart-kit'
 
 class DeviceData extends Component {
+    state = {
+      data_airtemp: [],
+      airtemp: {
+        labels: ['January', 'February', 'March', 'April', 'May', 'June'],
+        datasets: [{
+          data: [ 20, 45, 28, 80, 99, 43 ],
+          color: (opacity = 1) => `rgba(32, 34, 38, ${opacity})`, // optional
+          strokeWidth: 2 // optional
+        }]
+      },
+      data_soiltemp: [],
+      soiltemp: {
+        labels: ['January', 'February', 'March', 'April', 'May', 'June'],
+        datasets: [{
+          data: [ 20, 45, 28, 80, 99, 43 ],
+          color: (opacity = 1) => `rgba(32, 34, 38, ${opacity})`, // optional
+          strokeWidth: 2 // optional
+        }]
+      },
+      data_humidity: [],
+      humidity: {
+        labels: ['January', 'February', 'March', 'April', 'May', 'June'],
+        datasets: [{
+          data: [ 20, 45, 28, 80, 99, 43 ],
+          color: (opacity = 1) => `rgba(32, 34, 38, ${opacity})`, // optional
+          strokeWidth: 2 // optional
+        }]
+      },
+      data_moisture: [],
+      moisture: {
+        labels: ['January', 'February', 'March', 'April', 'May', 'June'],
+        datasets: [{
+          data: [ 20, 45, 28, 80, 99, 43 ],
+          color: (opacity = 1) => `rgba(32, 34, 38, ${opacity})`, // optional
+          strokeWidth: 2 // optional
+        }]
+      }
+    }
 
     componentDidMount() {
         if (this.props.item && this.props.item.device_id) {
-            this.props.deviceDataAction(
-                this.props.item.device_id,
-                this.props.userToken,
-                'temperature',
-                1464141239.78,
-                1564138279.23
-            );
-            console.log("yay");
+          console.log(this.props.item.device_id);
+          this.props.deviceDataAction(this.props.item.device_id, this.props.userToken, 'airtemp');
+          this.props.deviceDataAction(this.props.item.device_id, this.props.userToken, 'humidity');
+          this.timer = setInterval(() => this.props.deviceDataAction(this.props.item.device_id, this.props.userToken, 'airtemp'), 5000);
+          this.timer = setInterval(() => this.props.deviceDataAction(this.props.item.device_id, this.props.userToken, 'humidity'), 5000);
         }
-
     }
 
-    componentWillReceiveProps(nextProps) {
-        if (nextProps.data) {
-            console.log("component update data");
+    componentWillUnmount() {
+        clearInterval(this.timer);
+        this.timer = null;
+    }
+
+    transformData(data) {
+      var my_labels = [];
+      var my_data = [];
+      for (var i = 0; i < data.length; i++) {
+        var item = data[i];
+        if (i % 2 == 0) {
+          my_labels.push('')
+        } else {
+          my_labels.push(utcToTime(item.timestamp));
         }
+        my_data.push(item.value);
+      }
+      return {my_labels, my_data}
+    };
+
+    componentWillReceiveProps(nextProps) {
+      if (nextProps.data_humidity) {
+        let {my_labels, my_data} = this.transformData(nextProps.data_humidity)
+        this.setState({
+          humidity: {
+            labels: my_labels,
+            datasets: [{ data: my_data, color: (opacity = 1) => `rgba(32, 34, 38, ${opacity})`, strokeWidth: 2}]
+          }
+        })
+      }
+      if (nextProps.data_airtemp) {
+        let {my_labels, my_data} = this.transformData(nextProps.data_airtemp)
+        this.setState({
+          airtemp: {
+            labels: my_labels,
+            datasets: [{ data: my_data, color: (opacity = 1) => `rgba(32, 34, 38, ${opacity})`, strokeWidth: 2}]
+          }
+        })
+      }
     }
 
     render() {
-        const { containerStyle, titleText, baseText, bottomText } = dataStyle;
-        console.log(this.props)
+        const { humidity, airtemp } = this.state;
+        const { containerStyle, titleText, baseText, bottomText, graphText } = dataStyle;
+      //console.log(this.props)
         if (this.props.loading) {
             return <Spinner size="large" />;
         }
         const { serial_number, device_id, name, created, status } = this.props.item;
 
-        const testdata1 = {
-            labels: ['January', 'February', 'March', 'April', 'May', 'June'],
-            datasets: [{
-                data: [ 20, 45, 28, 80, 99, 43 ],
-                color: (opacity = 1) => `rgba(32, 34, 38, ${opacity})`, // optional
-                strokeWidth: 2 // optional
-            }]
-        }
         const testdata2 = {
             labels: ['Swim', 'Bike', 'Run'], // optional
             data: [0.4, 0.6, 0.8]
@@ -101,10 +163,25 @@ class DeviceData extends Component {
                     <Text style={baseText}>Status: {status}</Text>
                     <Text style={bottomText}>Created: {utcToIso(created)}</Text>
                   </Card>
+                  <View>
+                    <Text style={graphText}>Luftfeuchtigkeit</Text>
+                  </View>
                   <View paddingTop={20}>
                     <LineChart
-                      data={testdata1}
-                      width={screenWidth}
+                      data={humidity}
+                      width={screenWidth-20}
+                      height={220}
+                      chartConfig={chartConfig}
+                      bezier
+                    />
+                  </View>
+                  <View>
+                    <Text style={graphText}>Lufttemperatur</Text>
+                  </View>
+                  <View paddingTop={20}>
+                    <LineChart
+                      data={airtemp}
+                      width={screenWidth-20}
                       height={220}
                       chartConfig={chartConfig}
                       bezier
@@ -154,9 +231,12 @@ class DeviceData extends Component {
 }
 
 const mapStateToProps = state => ({
-    data: state.deviceData.data || [],
-    loading: state.deviceData.loading,
-    userToken: state.login.userToken,
+  data_airtemp: state.deviceData.data_airtemp,
+  data_humidity: state.deviceData.data_humidity,
+  data_moisture: state.deviceData.data_moisture,
+  data_soiltemp: state.deviceData.data_soiltemp,
+  loading: state.deviceData.loading,
+  userToken: state.login.userToken,
 });
 
 export default connect(mapStateToProps, { deviceDataAction })(DeviceData);

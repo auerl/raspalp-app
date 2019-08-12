@@ -9,7 +9,7 @@ import {
     SIZE_LARGE,
     SIZE_NORMAL,
 } from '../../config/dimen';
-import { COLOR_WHITE, COLOR_BLACK } from '../../config/colors';
+import { COLOR_WHITE, COLOR_BLACK, COLOR_GREY } from '../../config/colors';
 
 export const dataStyle = {
     containerStyle: {
@@ -21,6 +21,14 @@ export const dataStyle = {
     },
     baseText: {
         backgroundColor: COLOR_WHITE,
+        fontFamily: 'Roboto',
+        fontSize: SIZE_NORMAL,
+        paddingLeft: 20,
+        paddingRight: 10,
+        paddingBottom: 3,
+        paddingTop: 3,
+    },
+    graphText: {
         fontFamily: 'Roboto',
         fontSize: SIZE_NORMAL,
         paddingLeft: 20,
