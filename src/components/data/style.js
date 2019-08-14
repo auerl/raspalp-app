@@ -53,4 +53,8 @@ export const dataStyle = {
         paddingBottom: 15,
         paddingTop: 3,
     },
+    buttonStyle: {
+        flex: 1,
+        marginTop: 5
+    }
 };

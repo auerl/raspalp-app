@@ -9,27 +9,29 @@ const INITIAL_STATE = {
   data_humidity: [],
   data_moisture: [],
   data_soiltemp: [],
+  data_range: [],
   message: '',
   loading: false
 };
 
 export default (state = INITIAL_STATE, action) => {
+  // return { ...state, loading: true};
   switch (action.type) {
-
-    // case DEVICE_DATA:
-    //   return { ...state};
+    case 'range':
+      return { ...state, data_range: action.payload, loading: false };
     case 'airtemp':
-      return { ...state, data_airtemp: action.payload };
-    // case 'soiltemp':
-    //   return { ...state, data_soiltemp: action.payload };
+      return { ...state, data_airtemp: action.payload, loading: false };
+    case 'soiltemp':
+      return { ...state, data_soiltemp: action.payload, loading: false };
     case 'humidity':
-      return { ...state, data_humidity: action.payload };
-    // case 'moisture':
-    //   return { ...state, data_moisture: action.payload };
-    // case DEVICE_DATA_FAIL:
-    //   return { ...state, message: 'Device data could not be retrieved!', loading: false };
-
+      return { ...state, data_humidity: action.payload, loading: false };
+    case 'moisture':
+      return { ...state, data_moisture: action.payload, loading: false };
     default:
       return state;
   }
+  // case DEVICE_DATA:
+  //   return { ...state};
+  // case DEVICE_DATA_FAIL:
+  //   return { ...state, message: 'Device data could not be retrieved!', loading: false };
 };
