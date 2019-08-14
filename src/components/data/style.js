@@ -33,8 +33,8 @@ export const dataStyle = {
         fontSize: SIZE_NORMAL,
         paddingLeft: 20,
         paddingRight: 10,
-        paddingBottom: 3,
-        paddingTop: 3,
+        paddingBottom: 5,
+        paddingTop: 20,
     },
     titleText: {
         fontWeight: 'bold',

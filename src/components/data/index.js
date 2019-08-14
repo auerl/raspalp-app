@@ -7,228 +7,319 @@ import { Card, CardSection, Spinner } from '../common';
 import { dataStyle, itemStyle } from './style'
 import { utcToIso, utcToTime } from '../../utils/time'
 
-import {
-    PieChart,
-    BarChart,
-    LineChart,
-    ProgressChart,
-    StackedBarChart
-} from 'react-native-chart-kit'
+import { Defs, LinearGradient, Stop } from 'react-native-svg'
+import { PieChart, LineChart, Grid, ProgressCircle } from 'react-native-svg-charts'
+import { XAxis, YAxis } from 'react-native-svg-charts'
+
+import * as shape from 'd3-shape'
 
 class DeviceData extends Component {
-    state = {
-      data_airtemp: [],
-      airtemp: {
-        labels: ['January', 'February', 'March', 'April', 'May', 'June'],
-        datasets: [{
-          data: [ 20, 45, 28, 80, 99, 43 ],
-          color: (opacity = 1) => `rgba(32, 34, 38, ${opacity})`, // optional
-          strokeWidth: 2 // optional
-        }]
-      },
-      data_soiltemp: [],
-      soiltemp: {
-        labels: ['January', 'February', 'March', 'April', 'May', 'June'],
-        datasets: [{
-          data: [ 20, 45, 28, 80, 99, 43 ],
-          color: (opacity = 1) => `rgba(32, 34, 38, ${opacity})`, // optional
-          strokeWidth: 2 // optional
-        }]
-      },
-      data_humidity: [],
-      humidity: {
-        labels: ['January', 'February', 'March', 'April', 'May', 'June'],
-        datasets: [{
-          data: [ 20, 45, 28, 80, 99, 43 ],
-          color: (opacity = 1) => `rgba(32, 34, 38, ${opacity})`, // optional
-          strokeWidth: 2 // optional
-        }]
-      },
-      data_moisture: [],
-      moisture: {
-        labels: ['January', 'February', 'March', 'April', 'May', 'June'],
-        datasets: [{
-          data: [ 20, 45, 28, 80, 99, 43 ],
-          color: (opacity = 1) => `rgba(32, 34, 38, ${opacity})`, // optional
-          strokeWidth: 2 // optional
-        }]
-      }
+  constructor(props) {
+    super(props);
+    this.state = {
+      myDataHumidity: new Array(15).fill(65),
+      myTimesHumidity: new Array(15).fill(65),
+      myLabelsHumidity: new Array(15).fill(65),
+      myDataAirtemp: new Array(15).fill(15),
+      myTimesAirtemp: new Array(15).fill(15),
+      myLabelsAirtemp: new Array(15).fill(15),
     }
+  }
 
-    componentDidMount() {
-        if (this.props.item && this.props.item.device_id) {
-          console.log(this.props.item.device_id);
-          this.props.deviceDataAction(this.props.item.device_id, this.props.userToken, 'airtemp');
-          this.props.deviceDataAction(this.props.item.device_id, this.props.userToken, 'humidity');
-          this.timer = setInterval(() => this.props.deviceDataAction(this.props.item.device_id, this.props.userToken, 'airtemp'), 5000);
-          this.timer = setInterval(() => this.props.deviceDataAction(this.props.item.device_id, this.props.userToken, 'humidity'), 5000);
-        }
-    }
-
-    componentWillUnmount() {
-        clearInterval(this.timer);
-        this.timer = null;
-    }
-
-    transformData(data) {
-      var my_labels = [];
-      var my_data = [];
+  updateAirtemp = (data) => {
+    this.setState(state => {
+      var tempTimes = state.myTimesAirtemp;
+      var tempData = state.myDataAirtemp;
+      var tempLabels = state.myLabelsAirtemp;
+      const myTimesAirtemp = [...tempTimes];
+      const myLabelsAirtemp = [...tempLabels];
+      const myDataAirtemp = [...tempData];
       for (var i = 0; i < data.length; i++) {
         var item = data[i];
-        if (i % 2 == 0) {
-          my_labels.push('')
-        } else {
-          my_labels.push(utcToTime(item.timestamp));
+        if (!myTimesAirtemp.includes(item.timestamp)) {
+          tempTimes.shift();
+          tempData.shift();
+          tempLabels.shift();
+          const myTimesAirtemp = [...tempTimes, item.timestamp];
+          const myLabelsAirtemp = [...tempLabels, utcToTime(item.timestamp)];
+          const myDataAirtemp = [...tempData, item.value];
         }
-        my_data.push(item.value);
-      }
-      return {my_labels, my_data}
-    };
+      };
+      return {myDataAirtemp, myTimesAirtemp, myLabelsAirtemp};
+    });
+  };
 
-    componentWillReceiveProps(nextProps) {
-      if (nextProps.data_humidity) {
-        let {my_labels, my_data} = this.transformData(nextProps.data_humidity)
-        this.setState({
-          humidity: {
-            labels: my_labels,
-            datasets: [{ data: my_data, color: (opacity = 1) => `rgba(32, 34, 38, ${opacity})`, strokeWidth: 2}]
-          }
-        })
+
+  updateHumidity = (data) => {
+    this.setState(state => {
+      var tempTimes = state.myTimesHumidity;
+      var tempData = state.myDataHumidity;
+      var tempLabels = state.myLabelsHumidity;
+      var myTimesHumidity = [...tempTimes];
+      var myLabelsHumidity = [...tempLabels];
+      var myDataHumidity = [...tempData];
+      for (var i = 0; i < data.length; i++) {
+        var item = data[i];
+        if (!myTimesHumidity.includes(item.timestamp)) {
+          tempTimes.shift();
+          tempData.shift();
+          tempLabels.shift();
+          myTimesHumidity = [...tempTimes, parseInt(item.timestamp)];
+          myLabelsHumidity = [...tempLabels, parseInt(item.timestamp)]; //utcToTime(item.timestamp)];
+          myDataHumidity = [...tempData, parseInt(item.value)];
+          tempTimes = myTimesHumidity;
+          tempLabels = myLabelsHumidity;
+          tempData = myDataHumidity;
+        }
+      };
+      return {myDataHumidity, myTimesHumidity, myLabelsHumidity};
+    });
+  };
+
+  updateAirtemp = (data) => {
+    this.setState(state => {
+      var tempTimes = state.myTimesAirtemp;
+      var tempData = state.myDataAirtemp;
+      var tempLabels = state.myLabelsAirtemp;
+      var myTimesAirtemp = [...tempTimes];
+      var myLabelsAirtemp = [...tempLabels];
+      var myDataAirtemp = [...tempData];
+      console.log(data.length)
+      for (var i = 0; i < data.length; i++) {
+        var item = data[i];
+        if (!myTimesAirtemp.includes(item.timestamp)) {
+          tempTimes.shift();
+          tempData.shift();
+          tempLabels.shift();
+          myTimesAirtemp = [...tempTimes, parseInt(item.timestamp)];
+          myLabelsAirtemp = [...tempLabels, parseInt(item.timestamp)]; //utcToTime(item.timestamp)];
+          myDataAirtemp = [...tempData, parseInt(item.value)];
+          tempTimes = myTimesAirtemp;
+          tempLabels = myLabelsAirtemp;
+          tempData = myDataAirtemp;
+        }
+      };
+      return {myDataAirtemp, myTimesAirtemp, myLabelsAirtemp};
+    });
+  };
+
+
+  updateAirtemp2 = (data) => {
+    this.setState(state => {
+      var tempTimes = state.myTimesAirtemp;
+      var tempData = state.myDataAirtemp;
+      var tempLabels = state.myLabelsAirtemp;
+      var myTimesAirtemp = [];
+      var myLabelsAirtemp = [];
+      var myDataAirtemp = [];
+      for (var i = 0; i < data.length; i++) {
+        var item = data[i];
+        myTimesAirtemp.push(parseInt(item.timestamp));
+        myLabelsAirtemp.push(parseInt(item.timestamp));
+        myDataAirtemp.push(parseInt(item.value));
       }
-      if (nextProps.data_airtemp) {
-        let {my_labels, my_data} = this.transformData(nextProps.data_airtemp)
-        this.setState({
-          airtemp: {
-            labels: my_labels,
-            datasets: [{ data: my_data, color: (opacity = 1) => `rgba(32, 34, 38, ${opacity})`, strokeWidth: 2}]
-          }
-        })
+      return {myDataAirtemp, myTimesAirtemp, myLabelsAirtemp};
+    });
+  };
+
+  updateHumidity2 = (data) => {
+    this.setState(state => {
+      var tempTimes = state.myTimesHumidity;
+      var tempData = state.myDataHumidity;
+      var tempLabels = state.myLabelsHumidity;
+      var myTimesHumidity = [];
+      var myLabelsHumidity = [];
+      var myDataHumidity = [];
+      for (var i = 0; i < data.length; i++) {
+        var item = data[i];
+        myTimesHumidity.push(parseInt(item.timestamp));
+        myLabelsHumidity.push(parseInt(item.timestamp));
+        myDataHumidity.push(parseInt(item.value));
       }
+      return {myDataHumidity, myTimesHumidity, myLabelsHumidity};
+    });
+  };
+
+  componentWillReceiveProps(nextProps) {
+    if (nextProps.data_humidity) {
+      this.updateHumidity2(nextProps.data_humidity);
+    }
+    if (nextProps.data_airtemp) {
+      this.updateAirtemp2(nextProps.data_airtemp);
+    }
+  }
+
+  componentDidMount() {
+    if (this.props.item && this.props.item.device_id) {
+      console.log(this.props.item.device_id);
+      this.props.deviceDataAction(this.props.item.device_id, this.props.userToken, 'airtemp');
+      this.props.deviceDataAction(this.props.item.device_id, this.props.userToken, 'humidity');
+      this.timer = setInterval(() => this.props.deviceDataAction(this.props.item.device_id, this.props.userToken, 'airtemp'), 5000);
+      this.timer = setInterval(() => this.props.deviceDataAction(this.props.item.device_id, this.props.userToken, 'humidity'), 5000);
+      //this.timer = setInterval(() => this.onAddItem(Math.random() * 20), 1000);
+    }
+  }
+
+  render() {
+
+    const { myDataAirtemp, myLabelsAirtemp, myDataHumidity, myLabelsHumidity } = this.state;
+    const { serial_number, device_id, name, created, status } = this.props.item;
+    const { containerStyle, titleText, baseText, bottomText, graphText } = dataStyle;
+
+    const myLabelsAirtempTest = [10, 20];
+
+    const axesSvg = { fontSize: 10, fill: 'grey' };
+    const verticalContentInset = { top: 20, bottom: 20 }
+    const xAxisHeight = 50
+
+    const Gradient = () => (
+        <Defs key={'gradient'}>
+            <LinearGradient id={'gradient'} x1={'0'} y={'0%'} x2={'100%'} y2={'0%'}>
+                <Stop offset={'0%'} stopColor={'rgb(134, 65, 244)'}/>
+                <Stop offset={'100%'} stopColor={'rgb(66, 194, 244)'}/>
+            </LinearGradient>
+        </Defs>
+    )
+
+    // const { labelWidth, selectedSlice } = this.state;
+    // const { label, value } = selectedSlice;
+    // const keys = ['google', 'facebook', 'linkedin', 'youtube', 'Twitter'];
+
+    // const values = [15, 25, 35, 45, 55];
+    // const colors = ['#600080', '#9900cc', '#c61aff', '#d966ff', '#ecb3ff']
+    // const data = keys.map((key, index) => {
+    //     return {
+    //       key,
+    //       value: values[index],
+    //       svg: { fill: colors[index] },
+    //       arc: { outerRadius: (70 + values[index]) + '%', padAngle: label === key ? 0.1 : 0 },
+    //       onPress: () => this.setState({ selectedSlice: { label: key, value: values[index] } })
+    //     }
+    //   })
+    // const deviceWidth = Dimensions.get('window').width
+    return (<ScrollView style={containerStyle}>
+              <Card>
+                <CardSection>
+                  <Text style={titleText}>{name}</Text>
+                </CardSection>
+                <Text style={baseText}>Serial number: {serial_number}</Text>
+                <Text style={baseText}>Device ID: {device_id}</Text>
+                <Text style={baseText}>Status: {status}</Text>
+                <Text style={bottomText}>Created: {utcToIso(created)}</Text>
+              </Card>
+              <View>
+                <Text style={graphText}>Luftfeuchtigkeit</Text>
+              </View>
+              <View style={{ height: 200, padding: 20, flexDirection: 'row' }}>
+                <YAxis
+                  data={myDataHumidity}
+                  style={{ marginBottom: xAxisHeight }}
+                  contentInset={verticalContentInset}
+                  svg={axesSvg}
+                />
+                <View style={{ flex: 1, marginLeft: 10 }}>
+                  <LineChart
+                    style={{ flex: 1 }}
+                    data={myDataHumidity}
+                    contentInset={verticalContentInset}
+                    curve={shape.curveNatural}
+                    animate={true}
+                    svg={{
+                      strokeWidth: 2,
+                      stroke: 'url(#gradient)',
+                    }}
+                  >
+                    <Grid/>
+                    <Gradient/>
+                  </LineChart>
+                  <XAxis
+                    style={{ marginHorizontal: -10, height: xAxisHeight }}
+                    data={myLabelsHumidity}
+                    formatLabel={(value, index) => index}
+                    contentInset={{ left: 10, right: 10 }}
+                    svg={axesSvg}
+                  />
+                </View>
+              </View>
+              <View>
+                <Text style={graphText}>Lufttemperatur</Text>
+              </View>
+              <View style={{ height: 200, padding: 20, flexDirection: 'row' }}>
+                <YAxis
+                  data={myLabelsAirtempTest}
+                  style={{ marginBottom: xAxisHeight }}
+                  contentInset={verticalContentInset}
+                  svg={axesSvg}
+                />
+                <View style={{ flex: 1, marginLeft: 10 }}>
+                  <LineChart
+                    style={{ flex: 1 }}
+                    data={myDataAirtemp}
+                    contentInset={verticalContentInset}
+                    /* curve={shape.curveNatural} */
+                    animate={true}
+                    yMax={20}
+                    yMin={10}
+                    svg={{
+                      strokeWidth: 2,
+                      stroke: 'url(#gradient)',
+                    }}
+                  >
+                    <Grid/>
+                    <Gradient/>
+                  </LineChart>
+                  <XAxis
+                    style={{ marginHorizontal: -10, height: xAxisHeight }}
+                    data={myLabelsAirtemp}
+                    formatLabel={(value, index) => value}
+                    contentInset={{ left: 10, right: 10 }}
+                    svg={axesSvg}
+                  />
+                </View>
+              </View>
+              <View>
+                <Text style={graphText}>Wasserstand</Text>
+              </View>
+              <View style={{padding: 50}}>
+                <ProgressCircle
+                  style={ { height: 200 } }
+                  progress={ 0.7 }
+                  progressColor={'rgb(134, 65, 244)'}
+                  startAngle={ -Math.PI * 0.8 }
+                  endAngle={ Math.PI * 0.8 }
+                />
+              </View>
+            </ScrollView>
+    )
+        // const data = [ 50, 10, 40, 95, -4, -24, 85, 91, 35, 53, -53, 24, 50, -20, -80 ]
+
+        // const Gradient = () => (
+        //     <Defs key={'gradient'}>
+        //         <LinearGradient id={'gradient'} x1={'0'} y={'0%'} x2={'100%'} y2={'0%'}>
+        //             <Stop offset={'0%'} stopColor={'rgb(134, 65, 244)'}/>
+        //             <Stop offset={'100%'} stopColor={'rgb(66, 194, 244)'}/>
+        //         </LinearGradient>
+        //     </Defs>
+        // )
+
+        // return (
+        //     <LineChart
+        //         style={ { height: 200 } }
+        //         data={ data }
+        //         contentInset={ { top: 20, bottom: 20 } }
+        //         svg={{
+        //             strokeWidth: 2,
+        //             stroke: 'url(#gradient)',
+        //         }}
+        //     >
+        //         <Grid/>
+        //         <Gradient/>
+        //     </LineChart>
+        // )
     }
 
-    render() {
-        const { humidity, airtemp } = this.state;
-        const { containerStyle, titleText, baseText, bottomText, graphText } = dataStyle;
-      //console.log(this.props)
-        if (this.props.loading) {
-            return <Spinner size="large" />;
-        }
-        const { serial_number, device_id, name, created, status } = this.props.item;
-
-        const testdata2 = {
-            labels: ['Swim', 'Bike', 'Run'], // optional
-            data: [0.4, 0.6, 0.8]
-        }
-        const testdata3 = {
-            labels: ['January', 'February', 'March', 'April', 'May', 'June'],
-            datasets: [{
-                data: [ 20, 45, 28, 80, 99, 43 ]
-            }]
-        }
-        const testdata4 ={
-            labels: ['Test1', 'Test2'],
-            legend: ['L1', 'L2', 'L3'],
-            data: [
-                [60, 60, 60],
-                [30,30,60],
-            ],
-            barColors: ['#dfe4ea', '#ced6e0', '#a4b0be'],
-        }
-        const testdata5 = [
-            { name: 'Seoul', population: 21500000, color: 'rgba(131, 167, 234, 1)', legendFontColor: '#7F7F7F', legendFontSize: 15 },
-            { name: 'Toronto', population: 2800000, color: '#F00', legendFontColor: '#7F7F7F', legendFontSize: 15 },
-            { name: 'Beijing', population: 527612, color: 'red', legendFontColor: '#7F7F7F', legendFontSize: 15 },
-            { name: 'New York', population: 8538000, color: '#ffffff', legendFontColor: '#7F7F7F', legendFontSize: 15 },
-            { name: 'Moscow', population: 11920000, color: 'rgb(0, 0, 255)', legendFontColor: '#7F7F7F', legendFontSize: 15 }
-        ]
-
-
-
-
-        const screenWidth = Dimensions.get('window').width
-        const chartConfig = {
-            backgroundGradientFrom: '#e9e9ef',
-            backgroundGradientTo: '#e9e9ef',
-            color: (opacity = 1) => `rgba(32, 34, 38, ${opacity})`,
-            strokeWidth: 2 // optional, default 3
-        }
-
-        return (<ScrollView style={containerStyle}>
-                  <Card>
-                    <CardSection>
-                      <Text style={titleText}>{name}</Text>
-                    </CardSection>
-                    <Text style={baseText}>Serial number: {serial_number}</Text>
-                    <Text style={baseText}>Device ID: {device_id}</Text>
-                    <Text style={baseText}>Status: {status}</Text>
-                    <Text style={bottomText}>Created: {utcToIso(created)}</Text>
-                  </Card>
-                  <View>
-                    <Text style={graphText}>Luftfeuchtigkeit</Text>
-                  </View>
-                  <View paddingTop={20}>
-                    <LineChart
-                      data={humidity}
-                      width={screenWidth-20}
-                      height={220}
-                      chartConfig={chartConfig}
-                      bezier
-                    />
-                  </View>
-                  <View>
-                    <Text style={graphText}>Lufttemperatur</Text>
-                  </View>
-                  <View paddingTop={20}>
-                    <LineChart
-                      data={airtemp}
-                      width={screenWidth-20}
-                      height={220}
-                      chartConfig={chartConfig}
-                      bezier
-                    />
-                  </View>
-                  <View paddingTop={20}>
-                    <ProgressChart
-                      data={testdata2}
-                      width={screenWidth}
-                      height={220}
-                      chartConfig={chartConfig}
-                    />
-                  </View>
-                  <View paddingTop={20}>
-                    <BarChart
-                      data={testdata3}
-                      width={screenWidth}
-                      height={220}
-                      yAxisLabel={'$'}
-                      chartConfig={chartConfig}
-                    />
-                  </View>
-                  <View paddingTop={20}>
-                    <StackedBarChart
-                      data={testdata4}
-                      width={screenWidth}
-                      height={220}
-                      chartConfig={chartConfig}
-                    />
-                  </View>
-                  <View paddingTop={20} paddingBottom={30}>
-                    <PieChart
-                      data={testdata5}
-                      width={screenWidth}
-                      height={220}
-                      chartConfig={chartConfig}
-                      accessor="population"
-                      backgroundColor="transparent"
-                      paddingLeft="15"
-                      absolute
-                    />
-                  </View>
-                </ScrollView>
-
-               );
-    }
 }
+
 
 const mapStateToProps = state => ({
   data_airtemp: state.deviceData.data_airtemp,

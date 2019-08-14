@@ -8,12 +8,13 @@ import { ApiCall } from '../network/ApiUtils';
 
 export const deviceDataAction = (device_id, token, sensor_type) => (dispatch) => {
   const to_utc = Math.round(+new Date()/1000); // end now
-  const from_utc = to_utc - (10. * 60.); // start 10 minutes ago
-  dispatch({ type: DEVICE_DATA});
+  const from_utc = to_utc - 200.; // start 10 minutes ago
+  //dispatch({ type: DEVICE_DATA});
   var url = USER_BASE_DATA_ENDPOINT;
   var url = url + device_id + '/' + sensor_type + '?from_utc=' + from_utc.toString() + '&to_utc=' + to_utc.toString();
   console.log(url);
-  const devices = ApiCall(url, 'GET', {}, {'Authorization': token},
+  const data = ApiCall(
+    url, 'GET', {}, {'Authorization': token},
     response => onDataSuccess(dispatch, response, sensor_type),
     error => onDataError(dispatch, error)
   );

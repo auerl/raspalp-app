@@ -35,6 +35,29 @@ export const ApiCall = (url, method, payload={}, extraHeaders={}, onSuccess, onE
   return request;
 };
 
+export const ApiCallTest = (url, method, payload={}, extraHeaders={}, onSuccess, onError) => {
+  let data = {
+    method: method,
+    headers: {
+      ...extraHeaders,
+    },
+  }
+  // get doesn't allow to send a body
+  if (method != 'GET') {
+    data.body = JSON.stringify(payload);
+  }
+  if (method == 'POST' || method == 'PUT') {
+    data.headers['Accept'] = 'application/json'
+    data.headers['Content-Type'] = 'application/json'
+  }
+  const request = fetch(url, data)
+        .then(response => console.log(response))
+        .then(responseData => onSuccess(responseData))
+        .catch(error => onError(error));
+  return request;
+};
+
+
 export const ApiPostJSON = (url, payload={}, onSuccess, onError) => {
   let data = {
     method: 'POST',
