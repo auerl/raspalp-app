@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { Dimensions, ScrollView, View, Text, TextInput, FlatList, StyleSheet } from 'react-native';
 import { connect } from 'react-redux';
 import { Actions } from 'react-native-router-flux';
-import { deviceDataAction } from '../../actions/DeviceDataActions';
+import { deviceDataAction, deviceTaskAction } from '../../actions/DeviceDataActions';
 import { Card, CardSection, Spinner } from '../common';
 import { dataStyle, itemStyle } from './style'
 import { utcToIso, utcToTime, utcToTimeSecsLabel } from '../../utils/time'
@@ -11,6 +11,8 @@ import { Path, Defs, LinearGradient, Stop } from 'react-native-svg'
 import { PieChart, LineChart, Grid, ProgressCircle, AreaChart } from 'react-native-svg-charts'
 import { XAxis, YAxis } from 'react-native-svg-charts'
 import { Button } from 'react-native-elements';
+
+import DialogInput from 'react-native-dialog-input';
 
 import * as shape from 'd3-shape'
 
@@ -33,12 +35,23 @@ class DeviceData extends Component {
       myDataRange: new Array(15).fill(20),
       myTimesRange: new Array(15).fill(20),
       myLabelsRange: new Array(15).fill(20),
+      isDialogVisible: false,
+      message: ''
     }
   }
 
-  onsubmitJob() {
+  onSubmitJob = (liter) =>  {
+    this.setState({isDialogVisible:false})
+    this.props.deviceTaskAction(liter, this.props.item.device_id, this.props.userToken)
     console.log("job hinzugefügt")
-    //Actions.QRCode();
+  }
+
+  onCloseDialog = () =>  {
+    this.setState({isDialogVisible:false})
+  }
+
+  onShowDialog = () => {
+    this.setState({isDialogVisible:true})
   }
 
   updateAirtemp = (data) => {
@@ -209,6 +222,15 @@ class DeviceData extends Component {
 
     return (
       <ScrollView style={containerStyle}>
+        <DialogInput isDialogVisible={this.state.isDialogVisible}
+                     title={"Wassermenge eingeben"}
+                     message={"Bitte geben Sie die Wassermenge ein, mit der Sie bewässern möchten:"}
+                     hintInput ={"Liter"}
+                     submitInput={ (liter) => {this.onSubmitJob(liter)} }
+                     submitText={"Giessen"}
+                     cancelText={"Abbrechen"}
+                     closeDialog={ () => {this.onCloseDialog()}}>
+        </DialogInput>
         <Card>
           <CardSection>
             <Text style={titleText}>{name}</Text>
@@ -372,9 +394,12 @@ class DeviceData extends Component {
           <Button
             title="Bewässerung starten"
             style={dataStyle.buttonStyle}
-            onPress={this.onSubmitJob}>
+            onPress={this.onShowDialog}>
           </Button>
         </View>
+        <Text style={dataStyle.errorTextStyle}>
+          {this.props.message}
+        </Text>
         <View>
           <Text style={graphText}>  </Text>
         </View>
@@ -393,6 +418,7 @@ const mapStateToProps = state => ({
   data_range: state.deviceData.data_range,
   loading: state.deviceData.loading,
   userToken: state.login.userToken,
+  message: state.deviceData.message,
 });
 
-export default connect(mapStateToProps, { deviceDataAction })(DeviceData);
+export default connect(mapStateToProps, { deviceDataAction, deviceTaskAction })(DeviceData);

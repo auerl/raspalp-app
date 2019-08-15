@@ -10,6 +10,9 @@ export const DEVICE_DATA_SUCCESS = 'device_data_success';
 export const DEVICE_DATA_FAIL = 'device_data_fail';
 export const DEVICE_DATA = 'device_data';
 
+export const DEVICE_TASK_SUCCESS = 'device_task_success';
+export const DEVICE_TASK_FAIL = 'device_task_fail';
+
 export const AUTHORIZED_USER = 'authorized_user';
 export const AUTH_SUCCESS = 'auth_success';
 export const AUTH_LOADING = 'auth_loading';

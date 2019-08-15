@@ -18,6 +18,7 @@
     "react-native": "https://github.com/expo/react-native/archive/sdk-34.0.0.tar.gz",
     "react-native-camera": "^3.0.1",
     "react-native-chart-kit": "^3.2.0",
+    "react-native-dialog-input": "^1.0.7",
     "react-native-elements": "^1.1.0",
     "react-native-highcharts": "^1.0.2",
     "react-native-pure-chart": "^0.0.24",

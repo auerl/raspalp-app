@@ -56,5 +56,12 @@ export const dataStyle = {
     buttonStyle: {
         flex: 1,
         marginTop: 5
-    }
+    },
+    errorTextStyle: {
+        fontSize: 16,
+        alignSelf: 'center',
+        color: 'orange',
+        marginBottom: 10,
+        marginTop:10
+    },
 };
