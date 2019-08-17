@@ -12,6 +12,9 @@ import { PieChart, LineChart, Grid, ProgressCircle, AreaChart } from 'react-nati
 import { XAxis, YAxis } from 'react-native-svg-charts'
 import { Button } from 'react-native-elements';
 
+import { Slider } from 'react-native-elements';
+import { ToggleSwitch } from 'toggle-switch-react-native';
+
 import DialogInput from 'react-native-dialog-input';
 
 import * as shape from 'd3-shape'
@@ -20,23 +23,23 @@ class DeviceData extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      myDataHumidity: new Array(15).fill(65),
-      myTimesHumidity: new Array(15).fill(65),
-      myLabelsHumidity: new Array(15).fill(65),
-      myDataAirtemp: new Array(15).fill(15),
-      myTimesAirtemp: new Array(15).fill(15),
-      myLabelsAirtemp: new Array(15).fill(15),
-      myDataMoisture: new Array(15).fill(500),
-      myTimesMoisture: new Array(15).fill(500),
-      myLabelsMoisture: new Array(15).fill(500),
-      myDataSoiltemp: new Array(15).fill(15),
-      myTimesSoiltemp: new Array(15).fill(15),
-      myLabelsSoiltemp: new Array(15).fill(15),
-      myDataRange: new Array(15).fill(20),
-      myTimesRange: new Array(15).fill(20),
-      myLabelsRange: new Array(15).fill(20),
+      myDataHumidity: [],
+      myTimesHumidity: [],
+      myLabelsHumidity: [],
+      myDataAirtemp: [],
+      myTimesAirtemp: [],
+      myLabelsAirtemp: [],
+      myDataMoisture: [],
+      myTimesMoisture: [],
+      myLabelsMoisture: [],
+      myDataSoiltemp: [],
+      myTimesSoiltemp: [],
+      myLabelsSoiltemp: [],
+      myDataRange: [],
+      myTimesRange: [],
+      myLabelsRange: [],
       isDialogVisible: false,
-      message: ''
+      message: '',
     }
   }
 
@@ -66,7 +69,7 @@ class DeviceData extends Component {
         var item = data[i];
         myTimesAirtemp.push(parseInt(item.timestamp));
         myLabelsAirtemp.push(parseInt(item.timestamp));
-        myDataAirtemp.push(parseInt(item.value));
+        myDataAirtemp.push(parseFloat(item.value));
       }
       return {myDataAirtemp, myTimesAirtemp, myLabelsAirtemp};
     });
@@ -84,7 +87,7 @@ class DeviceData extends Component {
         var item = data[i];
         myTimesHumidity.push(parseInt(item.timestamp));
         myLabelsHumidity.push(parseInt(item.timestamp));
-        myDataHumidity.push(parseInt(item.value));
+        myDataHumidity.push(parseFloat(item.value));
       }
       return {myDataHumidity, myTimesHumidity, myLabelsHumidity};
     });
@@ -102,7 +105,7 @@ class DeviceData extends Component {
         var item = data[i];
         myTimesSoiltemp.push(parseInt(item.timestamp));
         myLabelsSoiltemp.push(parseInt(item.timestamp));
-        myDataSoiltemp.push(parseInt(item.value));
+        myDataSoiltemp.push(parseFloat(item.value));
       }
       return {myDataSoiltemp, myTimesSoiltemp, myLabelsSoiltemp};
     });
@@ -120,7 +123,7 @@ class DeviceData extends Component {
         var item = data[i];
         myTimesMoisture.push(parseInt(item.timestamp));
         myLabelsMoisture.push(parseInt(item.timestamp));
-        myDataMoisture.push(parseInt(item.value));
+        myDataMoisture.push(parseFloat(item.value));
       }
       return {myDataMoisture, myTimesMoisture, myLabelsMoisture};
     });
@@ -138,7 +141,7 @@ class DeviceData extends Component {
         var item = data[i];
         myTimesRange.push(parseInt(item.timestamp));
         myLabelsRange.push(parseInt(item.timestamp));
-        myDataRange.push(item.value);
+        myDataRange.push(parseFloat(item.value));
       }
       return {myDataRange, myTimesRange, myLabelsRange};
     });
@@ -190,7 +193,7 @@ class DeviceData extends Component {
       myDataMoisture,
       myLabelsMoisture,
       myDataRange,
-      myLabelsRange
+      myLabelsRange,
     } = this.state;
 
     const { serial_number, device_id, name, created, status } = this.props.item;
@@ -217,6 +220,11 @@ class DeviceData extends Component {
         fill={'none'}
       />
     )
+
+    const labelYHumid = [0., 20., 40., 50., 60., 80., 100.]
+    const labelYMoisture = [-1000, 0, 1000, 2000, 3000, 4000]
+    const labelYTemperature = [0, 10, 20, 30, 40]
+    const labelYTemperatureSoil = [0., 10., 20., 30., 40.]
 
     const deviceWidth = Dimensions.get('window').width
 
@@ -245,7 +253,7 @@ class DeviceData extends Component {
         </View>
         <View style={{ height: 230, padding: 20, flexDirection: 'row' }}>
           <YAxis
-            data={myDataHumidity}
+            data={labelYHumid}
             style={{ marginBottom: xAxisHeight }}
             contentInset={verticalContentInset}
             svg={axesSvg}
@@ -257,6 +265,8 @@ class DeviceData extends Component {
               contentInset={verticalContentInset}
               curve={shape.curveNatural}
               animate={true}
+              yMax={100}
+              yMin={0}
               svg={{
                 strokeWidth: 2,
                 stroke: 'url(#gradient)',
@@ -280,7 +290,7 @@ class DeviceData extends Component {
         </View>
         <View style={{ height: 230, padding: 20, flexDirection: 'row' }}>
           <YAxis
-            data={myDataMoisture}
+            data={labelYMoisture}
             style={{ marginBottom: xAxisHeight }}
             contentInset={verticalContentInset}
             svg={axesSvg}
@@ -292,6 +302,8 @@ class DeviceData extends Component {
               contentInset={verticalContentInset}
               curve={shape.curveNatural}
               animate={true}
+              yMin={-1000}
+              yMax={4000}
               svg={{
                 strokeWidth: 2,
                 stroke: 'url(#gradient)',
@@ -315,7 +327,7 @@ class DeviceData extends Component {
         </View>
         <View style={{ height: 230, padding: 20, flexDirection: 'row' }}>
           <YAxis
-            data={myDataAirtemp}
+            data={labelYTemperature}
             style={{ marginBottom: xAxisHeight }}
             contentInset={verticalContentInset}
             svg={axesSvg}
@@ -327,6 +339,8 @@ class DeviceData extends Component {
               contentInset={verticalContentInset}
               curve={shape.curveNatural}
               animate={true}
+              yMin={0.}
+              yMax={40.}
               svg={{
                 strokeWidth: 2,
                 stroke: 'url(#gradient)',
@@ -347,7 +361,7 @@ class DeviceData extends Component {
         </View>
         <View style={{ height: 230, padding: 20, flexDirection: 'row' }}>
           <YAxis
-            data={myDataSoiltemp}
+            data={labelYTemperature}
             style={{ marginBottom: xAxisHeight }}
             contentInset={verticalContentInset}
             svg={axesSvg}
@@ -359,6 +373,8 @@ class DeviceData extends Component {
               contentInset={verticalContentInset}
               curve={shape.curveNatural}
               animate={true}
+              yMin={0.}
+              yMax={40.}
               svg={{
                 strokeWidth: 2,
                 stroke: 'url(#gradient)',
@@ -380,6 +396,51 @@ class DeviceData extends Component {
         <View>
           <Text style={graphText}>Wasserstand: {parseInt(myDataRange[myDataRange.length-1]*100)}%</Text>
         </View>
+        {/* <View style={addItemStyles.wrapper}> */}
+        {/*     <View> */}
+        {/*         <Text>Zisternengrösse konfigurieren:</Text> */}
+        {/*         <View style={{flexDirection:"row"}}> */}
+        {/*             <View style={{flex:1}}> */}
+        {/*                 <TextInput */}
+        {/*                   placeholder={"R1"} */}
+        {/*                   keyboardType={"numeric"} */}
+        {/*                   value={this.state.r1_value.toString()} */}
+        {/*                   style={{justifyContent: 'flex-start',}} */}
+        {/*                   onChangeText={(text) => this.setState({r1_value: text})} */}
+        {/*                 /> */}
+        {/*             </View> */}
+        {/*             <View style={{flex:1}}> */}
+        {/*                 <TextInput */}
+        {/*                   placeholder={"R2"} */}
+        {/*                   keyboardType={"numeric"} */}
+        {/*                   value={this.state.r2_value.toString()} */}
+        {/*                   style={{justifyContent: 'flex-end',}} */}
+        {/*                   onChangeText={(text) => this.setState({r2_value: text})} */}
+        {/*                 /> */}
+        {/*             </View> */}
+        {/*         </View> */}
+        {/*         <View style={{flexDirection:"row"}}> */}
+        {/*             <View style={{flex:1}}> */}
+        {/*                 <TextInput */}
+        {/*                   placeholder={"A"} */}
+        {/*                   keyboardType={"numeric"} */}
+        {/*                   value={this.state.a_value.toString()} */}
+        {/*                   style={{justifyContent: 'flex-start',}} */}
+        {/*                   onChangeText={(text) => this.setState({a_value: text})} */}
+        {/*                 /> */}
+        {/*             </View> */}
+        {/*             <View style={{flex:1}}> */}
+        {/*                 <TextInput */}
+        {/*                   placeholder={"H"} */}
+        {/*                   keyboardType={"numeric"} */}
+        {/*                   value={this.state.h_value.toString()} */}
+        {/*                   style={{justifyContent: 'flex-end',}} */}
+        {/*                   onChangeText={(text) => this.setState({h_value: text})} */}
+        {/*                 /> */}
+        {/*             </View> */}
+        {/*         </View> */}
+        {/*     </View> */}
+        {/* </View> */}
         <View style={{padding: 50}}>
           <ProgressCircle
             style={ { height: 200 } }
@@ -390,16 +451,27 @@ class DeviceData extends Component {
             animate={true}
           />
         </View>
-        <View style={{width: "60%", alignSelf: "center"}}>
-          <Button
-            title="Bewässerung starten"
-            style={dataStyle.buttonStyle}
-            onPress={this.onShowDialog}>
-          </Button>
+        {/* <View style={{ flex: 1, alignItems: 'stretch', justifyContent: 'center' }}> */}
+        {/*   <Slider */}
+        {/*     value={this.state.wassermenge} */}
+        {/*     maximumValue={10.} */}
+        {/*     minimumValue={0.} */}
+        {/*     thumbTintColor={"#F7F7F7"} */}
+        {/*     onValueChange={value => this.setState({ wassermenge: value })} */}
+        {/*   /> */}
+        {/*   <Text>Wassermenge: {this.state.wassermenge.toFixed(2)}</Text> */}
+        {/* </View> */}
+        <View>
+          <Text style={graphText}>  </Text>
         </View>
-        <Text style={dataStyle.errorTextStyle}>
-          {this.props.message}
-        </Text>
+        <View style={{width: "60%", alignSelf: "center"}}>
+          <Button title="Bewässerung starten" style={dataStyle.buttonStyle} onPress={this.onShowDialog} />
+        </View>
+        <View>
+          <Text style={dataStyle.errorTextStyle}>
+            {this.props.message}
+          </Text>
+        </View>
         <View>
           <Text style={graphText}>  </Text>
         </View>
@@ -408,6 +480,36 @@ class DeviceData extends Component {
     }
 
 }
+
+const addItemStyles = StyleSheet.create({
+    wrapper: {
+        padding: 10,
+        backgroundColor: '#FFFFFF'
+    },
+    inputLabels: {
+        fontSize: 16,
+        color: '#000000',
+        marginBottom: 7,
+    },
+    inputField: {
+        backgroundColor: '#EEEEEE',
+        padding: 10,
+        color: '#505050',
+        height: 50
+    },
+    inputWrapper: {
+        paddingBottom: 20,
+    },
+    saveBtn: {
+        backgroundColor: '#003E7D',
+        alignItems: 'center',
+        padding: 12,
+    },
+    saveBtnText: {
+        color: '#FFFFFF',
+        fontSize: 18,
+    }
+});
 
 
 const mapStateToProps = state => ({

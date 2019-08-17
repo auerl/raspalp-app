@@ -13,7 +13,7 @@ export const USER_DETAILS_ENDPOINT= `${RALP_API_BASE_URL}/users/`;
 export const DEVICE_ADD_ENDPOINT= `${RALP_API_BASE_URL}/users/registerDevice`;
 export const DEVICE_REGISTER_ENDPOINT= `${RALP_API_BASE_URL}/devices`;
 export const DEVICE_LOGIN_ENDPOINT= `${RALP_API_BASE_URL}/devices/authorize`;
-export const DEVICE_TASK_ENDPOINT= `${RALP_API_BASE_URL}/devices/sendTask`;
+export const DEVICE_TASK_ENDPOINT= `${RALP_API_BASE_URL}/devices/sendTask/`;
 
 export const BOX_UPDATE_TOKEN_ENDPOINT= `${RALP_BOX_BASE_URL}/setup/token`;
 export const BOX_UPDATE_WIFI_ENDPOINT= `${RALP_BOX_BASE_URL}/setup/wifi`;

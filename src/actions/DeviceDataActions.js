@@ -39,7 +39,7 @@ const onDataError = (dispatch, error) => {
 export const deviceTaskAction = (liter, device_id, token) => (dispatch) => {
   const data = ApiCall(
     DEVICE_TASK_ENDPOINT + device_id,
-    'POST',
+    'PUT',
     {liter: liter},
     {'Authorization': token},
     response => onTaskSuccess(dispatch, response),
