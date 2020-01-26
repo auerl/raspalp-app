@@ -13,12 +13,7 @@ import { Actions, ActionConst } from 'react-native-router-flux';
 import { addDeviceToUser, registerDeviceAccount, loginAsDevice, setupDeviceWifi, setupDeviceToken } from '../../actions/QRCodeActions';
 
 import {
-  DEVICE_NAME,
-  DEVICE_PASSWORD,
-  DEVICE_SERIAL_NUMBER,
-  H_DEVICE_NAME,
-  H_DEVICE_PASSWORD,
-  H_DEVICE_SERIAL_NUMBER,
+  devicesStrings,
   ALERT_TITLE,
   OK,
 } from '../../config/strings';
@@ -174,16 +169,16 @@ class QRCode extends Component {
             <Card>
               <CardSection>
                 <Input
-                  label={DEVICE_NAME}
-                  placeholder={H_DEVICE_NAME}
+                  label={deviceStrings.deviceNameTitle}
+                  placeholder={devicesStrings.deviceNamePlace}
                   value={this.state.deviceName}
                   onChangeText={text => this.setState({ deviceName: text })}
                 />
               </CardSection>
               <CardSection>
                 <Input
-                  label={DEVICE_SERIAL_NUMBER}
-                  placeholder={H_DEVICE_SERIAL_NUMBER}
+                  label={deviceStrings.serialNumberTitle}
+                  placeholder={deviceStrings.serialNumberPlace}
                   editable={false}
                   value={this.state.deviceSerialNumber}
                   onChangeText={text => this.setState({ deviceSerialNumber: text })}

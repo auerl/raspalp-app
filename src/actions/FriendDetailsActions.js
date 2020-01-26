@@ -1,35 +1,31 @@
 import {
-  FRIEND_DETAILS,
-  FRIEND_DETAILS_SUCCESS,
-  FRIEND_DETAILS_FAIL
-} from './types';
-import { USER_DETAILS_ENDPOINT } from '../network/ApiConst';
+  UserEndpoints,
+  RequestMethods,
+  HttpStatus
+} from '../network/ApiConst';
+import { Friend } from './types';
 import { ApiCall } from '../network/ApiUtils';
 
-
 export const getFriendDetails = (token, userId) => (dispatch) => {
-  dispatch({ type: FRIENDS });
-  var url = USER_LIST_USERS_ENDPOINT + userId;
+  dispatch({ type: Friend.details.default });
+  var url = UserEndpoints.getDetails + userId;
   const devices = ApiCall(
-    url,
-    'GET',
-    {},
-    {'Authorization': token},
+    url, RequestMethods.get, {}, {'Authorization': token},
     response => onGetFriendDetailsSuccess(dispatch, response),
     error => onGetFriendDetailsError(dispatch, error)
   );
 };
 
 const onGetFriendDetailsSuccess = (dispatch, response) => {
-  if (response && response.meta.code === 200 ) {
+  if (response && response.meta.code === HttpStatus.ok ) {
     dispatch({
-      type: FRIEND_DETAILS_SUCCESS,
+      type: Friend.details.success,
       payload: response.data || []
     });
   }
 }
 
 const onGetFriendDetailsError = (dispatch, error) => {
-  dispatch({ type: FRIEND_DETAILS_FAIL });
+  dispatch({ type: Friend.details.fail });
   console.log('onError: ', error);
 }

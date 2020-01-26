@@ -23,13 +23,14 @@ export const loginStyle = {
     },
     textStyle: {
         alignSelf: 'center',
-        margin: 40
+        margin: 40,
+        color: 'white'
     },
     logoStyle: {
         flex: 1,
         width: "80%",
         resizeMode: "contain",
-        alignSelf: "center"
+        alignSelf: "center",
     },
     buttonStyle: {
         flex: 1,

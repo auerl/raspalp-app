@@ -1,14 +1,5 @@
-import {
-  SIGNUP_FAIL,
-  SIGNUP_SUCCESS,
-  SIGNUP_LOADING,
-} from '../actions/types';
-
-import {
-  REGISTER_SUCCESS,
-  REGISTER_ERROR,
-  LOADING
-} from '../config/strings';
+import { Auth } from '../actions/types';
+import { actionStrings } from '../config/strings';
 
 const INITIAL_STATE = {
   message: '',
@@ -25,14 +16,12 @@ const INITIAL_STATE = {
 
 export default (state = INITIAL_STATE, action) => {
   switch (action.type) {
-
-    case SIGNUP_SUCCESS:
-      return { ...state, ...INITIAL_STATE, registered: true, email: action.payload.email, password: action.payload.password, loading:true,  message: REGISTER_SUCCESS};
-    case SIGNUP_LOADING:
-      return { ...state, ...INITIAL_STATE, loading:true,  message: LOADING};
-    case SIGNUP_FAIL:
-      return { ...state, ...INITIAL_STATE, message: REGISTER_ERROR };
-
+    case Auth.signup.success:
+      return { ...state, ...INITIAL_STATE, registered: true, email: action.payload.email, password: action.payload.password, loading:true,  message: actionStrings.signup.success};
+    case Auth.signup.loading:
+      return { ...state, ...INITIAL_STATE, loading:true,  message: actionStrings.signup.loading};
+    case Auth.signup.fail:
+      return { ...state, ...INITIAL_STATE, message: actionStrings.signup.error };
     default:
       return state;
   }

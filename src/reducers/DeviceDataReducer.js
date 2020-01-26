@@ -1,10 +1,5 @@
-import {
-  DEVICE_DATA,
-  DEVICE_DATA_SUCCESS,
-  DEVICE_DATA_FAIL,
-  DEVICE_TASK_SUCCESS,
-  DEVICE_TASK_FAIL,
-} from '../actions/types';
+import { Device } from '../actions/types';
+import { actionStrings } from '../config/strings';
 
 const INITIAL_STATE = {
   data_airtemp: [],
@@ -17,27 +12,22 @@ const INITIAL_STATE = {
 };
 
 export default (state = INITIAL_STATE, action) => {
-  // return { ...state, loading: true};
   switch (action.type) {
-    case 'range':
+    case Device.sensor.range:
       return { ...state, data_range: action.payload, loading: false };
-    case 'airtemp':
+    case Device.sensor.airtemp:
       return { ...state, data_airtemp: action.payload, loading: false };
-    case 'soiltemp':
+    case Device.sensor.soiltemp:
       return { ...state, data_soiltemp: action.payload, loading: false };
-    case 'humidity':
+    case Device.sensor.humidity:
       return { ...state, data_humidity: action.payload, loading: false };
-    case 'moisture':
+    case Device.sensor.moisture:
       return { ...state, data_moisture: action.payload, loading: false };
-    case DEVICE_TASK_FAIL:
-      return { ...state, message: 'Bewässerungsauftrag nicht gesendet!'};
-    case DEVICE_TASK_SUCCESS:
-      return { ...state, message: 'Bewässerungsauftrag gesendet!'};
+    case Device.task.fail:
+      return { ...state, message: actionStrings.device.taskNotSent};
+    case Device.task.success:
+      return { ...state, message: actionStrings.device.taskSent};
     default:
       return state;
   }
-  // case DEVICE_DATA:
-  //   return { ...state};
-  // case DEVICE_DATA_FAIL:
-  //   return { ...state, message: 'Device data could not be retrieved!', loading: false };
 };

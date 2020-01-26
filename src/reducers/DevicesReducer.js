@@ -1,8 +1,5 @@
-import {
-  DEVICES,
-  DEVICES_SUCCESS,
-  DEVICES_FAIL,
-} from '../actions/types';
+import { Device } from '../actions/types';
+import { actionStrings } from '../config/strings';
 
 const INITIAL_STATE = {
   data: [],
@@ -12,14 +9,12 @@ const INITIAL_STATE = {
 
 export default (state = INITIAL_STATE, action) => {
   switch (action.type) {
-
-    case DEVICES:
-      return { ...state, loading: true, message: 'Device list loading' };
-    case DEVICES_SUCCESS:
+    case Device.list.default:
+      return { ...state, loading: true, message: actionStrings.device.listLoading };
+    case Device.list.success:
       return { ...state, ...INITIAL_STATE, data: action.payload };
-    case DEVICES_FAIL:
-      return { ...state, message: 'User devices could not be retrieved!', loading: false };
-
+    case Device.list.fail:
+      return { ...state, message: actionStrings.device.listError, loading: false };
     default:
       return state;
   }

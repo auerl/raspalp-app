@@ -1,14 +1,5 @@
-import {
-  AUTH_FAIL,
-  AUTH_SUCCESS,
-  AUTH_LOADING,
-} from '../actions/types';
-
-import {
-  LOGIN_ERROR,
-  LOGIN_SUCCESS,
-  LOADING
-} from '../config/strings';
+import { Auth } from '../actions/types';
+import { actionStrings } from '../config/strings';
 
 const INITIAL_STATE = {
   message: '',
@@ -26,12 +17,12 @@ const INITIAL_STATE = {
 
 export default (state = INITIAL_STATE, action) => {
   switch (action.type) {
-    case AUTH_SUCCESS:
-      return { ...state, error:false, userToken: action.payload.token, authorized:true, loading:false, message: LOGIN_SUCCESS};
-    case AUTH_LOADING:
-      return { ...state, ...INITIAL_STATE, error:false, loading: true, message: LOADING };
-    case AUTH_FAIL:
-      return { ...state, ...INITIAL_STATE, error:true, message: LOGIN_ERROR };
+    case Auth.login.success:
+      return { ...state, error:false, userToken: action.payload.token, authorized:true, loading:false, message: actionStrings.login.success};
+    case Auth.login.loading:
+      return { ...state, ...INITIAL_STATE, error: false, loading: true, message: actionStrings.login.loading };
+    case Auth.login.fail:
+      return { ...state, ...INITIAL_STATE, error: true, message: actionStrings.login.error };
     default:
       return state;
   }

@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Dimensions, ScrollView, View, Text, TextInput, FlatList, StyleSheet } from 'react-native';
+import { Dimensions, ScrollView, View, Text, TextInput, FlatList, StyleSheet, ImageBackground } from 'react-native';
 import { connect } from 'react-redux';
 import { Actions } from 'react-native-router-flux';
 import { deviceDataAction, deviceTaskAction } from '../../actions/DeviceDataActions';
@@ -18,6 +18,8 @@ import { ToggleSwitch } from 'toggle-switch-react-native';
 import DialogInput from 'react-native-dialog-input';
 
 import * as shape from 'd3-shape'
+
+import background from "../../../assets/tomato.png";
 
 class DeviceData extends Component {
   constructor(props) {
@@ -46,7 +48,7 @@ class DeviceData extends Component {
   onSubmitJob = (liter) =>  {
     this.setState({isDialogVisible:false})
     this.props.deviceTaskAction(liter, this.props.item.device_id, this.props.userToken)
-    console.log("job hinzugefügt")
+    console.log("New raspalp job added")
   }
 
   onCloseDialog = () =>  {
@@ -199,8 +201,8 @@ class DeviceData extends Component {
     const { serial_number, device_id, name, created, status } = this.props.item;
     const { containerStyle, titleText, baseText, bottomText, graphText } = dataStyle;
 
-    const axesSvg = { fontSize: 9, fill: 'grey'};
-    const axesSvgX = { fontSize: 9, fill: 'grey', rotation: 315, originY: 30, y: 5 };
+    const axesSvg = { fontSize: 9, fill: 'white'};
+    const axesSvgX = { fontSize: 9, fill: 'white', rotation: 315, originY: 30, y: 5 };
     const verticalContentInset = { top: 20, bottom: 20 }
     const xAxisHeight = 50
 
@@ -222,13 +224,14 @@ class DeviceData extends Component {
     )
 
     const labelYHumid = [0., 20., 40., 50., 60., 80., 100.]
-    const labelYMoisture = [-1000, 0, 1000, 2000, 3000, 4000]
+    const labelYMoisture = [-3000, 0, 3000, 6000, 9000, 12000]
     const labelYTemperature = [0, 10, 20, 30, 40]
     const labelYTemperatureSoil = [0., 10., 20., 30., 40.]
 
     const deviceWidth = Dimensions.get('window').width
 
     return (
+      <ImageBackground source={background} style={{width: '100%', height: '100%'}}>
       <ScrollView style={containerStyle}>
         <DialogInput isDialogVisible={this.state.isDialogVisible}
                      title={"Wassermenge eingeben"}
@@ -249,7 +252,7 @@ class DeviceData extends Component {
           <Text style={bottomText}>Created: {utcToIso(created)}</Text>
         </Card>
         <View>
-          <Text style={graphText}>Luftfeuchtigkeit: {myDataHumidity[myDataHumidity.length-1]}%</Text>
+          <Text style={graphText}>Luftfeuchtigkeit: {parseFloat(myDataHumidity[myDataHumidity.length-1]).toFixed(2)}%</Text>
         </View>
         <View style={{ height: 230, padding: 20, flexDirection: 'row' }}>
           <YAxis
@@ -302,8 +305,8 @@ class DeviceData extends Component {
               contentInset={verticalContentInset}
               curve={shape.curveNatural}
               animate={true}
-              yMin={-1000}
-              yMax={4000}
+              yMin={-3000}
+              yMax={12000}
               svg={{
                 strokeWidth: 2,
                 stroke: 'url(#gradient)',
@@ -323,7 +326,7 @@ class DeviceData extends Component {
           </View>
         </View>
         <View>
-          <Text style={graphText}>Luft- und Erdtemperatur: {myDataAirtemp[myDataAirtemp.length-1]} | {myDataSoiltemp[myDataSoiltemp.length-1]} &deg;C</Text>
+          <Text style={graphText}>Luft- und Erdtemperatur: {parseFloat(myDataAirtemp[myDataAirtemp.length-1]).toFixed(2)} | {parseFloat(myDataSoiltemp[myDataSoiltemp.length-1]).toFixed(2)} &deg;C</Text>
         </View>
         <View style={{ height: 230, padding: 20, flexDirection: 'row' }}>
           <YAxis
@@ -394,7 +397,7 @@ class DeviceData extends Component {
           </View>
         </View>
         <View>
-          <Text style={graphText}>Wasserstand: {parseInt(myDataRange[myDataRange.length-1]*100)}%</Text>
+          <Text style={graphText}>Wasserstand: {parseInt(myDataRange[myDataRange.length-1])} Liter</Text>
         </View>
         {/* <View style={addItemStyles.wrapper}> */}
         {/*     <View> */}
@@ -444,7 +447,7 @@ class DeviceData extends Component {
         <View style={{padding: 50}}>
           <ProgressCircle
             style={ { height: 200 } }
-            progress={ myDataRange[myDataRange.length-1] || 1.0}
+            progress={ myDataRange[myDataRange.length-1] / 203. || 0.}
             progressColor={'rgb(134, 65, 244)'}
             startAngle={ -Math.PI * 0.8 }
             endAngle={ Math.PI * 0.8 }
@@ -476,6 +479,7 @@ class DeviceData extends Component {
           <Text style={graphText}>  </Text>
         </View>
       </ScrollView>
+      </ImageBackground>
     )
     }
 

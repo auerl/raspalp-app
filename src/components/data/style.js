@@ -30,6 +30,7 @@ export const dataStyle = {
     },
     graphText: {
         fontFamily: 'Roboto',
+        color: 'white',
         fontSize: SIZE_NORMAL,
         paddingLeft: 20,
         paddingRight: 10,

@@ -1,8 +1,5 @@
-import {
-  FRIEND_DETAILS,
-  FRIEND_DETAILS_SUCCESS,
-  FRIEND_DETAILS_FAIL,
-} from '../actions/types';
+import { Friend } from '../actions/types';
+import { actionStrings } from '../config/strings';
 
 const INITIAL_STATE = {
   data: {},
@@ -12,12 +9,12 @@ const INITIAL_STATE = {
 
 export default (state = INITIAL_STATE, action) => {
   switch (action.type) {
-    case FRIEND_DETAILS:
-      return { ...state, loading: true, message: 'Friend details loading' };
-    case FRIEND_DETAILS_SUCCESS:
+    case Friend.details.default:
+      return { ...state, loading: true, message: actionStrings.friend.detailsloading };
+    case Friend.details.success:
       return { ...state, ...INITIAL_STATE, data: action.payload };
-    case FRIEND_DETAILS_FAIL:
-      return { ...state, message: 'Friend details could not be retrieved!', loading: false };
+    case Friend.details.fail:
+      return { ...state, message: actionStrings.friend.detailsError, loading: false };
 
     default:
       return state;

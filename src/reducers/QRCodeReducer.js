@@ -1,21 +1,4 @@
-import {
-  SIGNUP_FAIL,
-  SIGNUP_SUCCESS,
-  SIGNUP_LOADING,
-  DEVICE_ADD_FAIL_ALREADY_ADDED,
-  DEVICE_ADD_FAIL_NOT_FOUND,
-  DEVICE_ADD_SUCCESS,
-  DEVICE_ADD_LOADING,
-  DEVICE_REGISTER_FAIL,
-  DEVICE_REGISTER_LOADING,
-  DEVICE_REGISTER_SUCCESS,
-  DEVICE_LOGIN_FAIL,
-  DEVICE_LOGIN_LOADING,
-  DEVICE_LOGIN_SUCCESS,
-  DEVICE_SETUP_FAIL,
-  DEVICE_SETUP_LOADING,
-  DEVICE_SETUP_SUCCESS
-} from '../actions/types';
+import { Device } from '../actions/types';
 
 const INITIAL_STATE = {
   message: '',
@@ -43,34 +26,34 @@ const INITIAL_STATE = {
 export default (state = INITIAL_STATE, action) => {
   switch (action.type) {
 
-    case DEVICE_ADD_SUCCESS:
+    case Device.add.success:
       return { ...state, error: '', deviceAdded: true};
-    case DEVICE_ADD_LOADING:
+    case Device.add.loading:
       return { ...state, error: '', loading:true};
-    case DEVICE_ADD_FAIL_ALREADY_ADDED:
+    case Device.add.failExists:
       return { ...state, error: 'deviceAlreadyAdded'};
-    case DEVICE_ADD_FAIL_NOT_FOUND:
+    case Device.add.failNotFound:
       return { ...state, needToRegister: true, error: 'deviceNotFound'};
 
-    case DEVICE_REGISTER_SUCCESS:
+    case Device.register.success:
       return { ...state, error: '', registered: true};
-    case DEVICE_REGISTER_LOADING:
+    case Device.register.loading:
       return { ...state, error: '', loading:true};
-    case DEVICE_REGISTER_FAIL:
+    case Device.register.fail:
       return { ...state, error: 'registrationFailed' };
 
-    case DEVICE_LOGIN_SUCCESS:
+    case Device.login.success:
       return { ...state, error: '', deviceToken: action.payload.token, authorized: true, needToLogin: false, needToRegister: false, needToSetup: true, registered: false};
-    case DEVICE_LOGIN_LOADING:
+    case Device.login.loading:
       return { ...state, error: '', loading:true};
-    case DEVICE_LOGIN_FAIL:
+    case Device.login.fail:
       return { ...state, error: 'loginFailed' };
 
-    case DEVICE_SETUP_SUCCESS:
+    case Device.setup.success:
       return { ...state, error: '', setup: true, needToSetup: false};
-    case DEVICE_SETUP_LOADING:
+    case Device.setup.loading:
       return { ...state, error: '', loading: true};
-    case DEVICE_SETUP_FAIL:
+    case Device.setup.fail:
       return { ...state, needToRegister: false, needToSetup: true, error: 'setupFailed' };
 
 

@@ -1,45 +1,74 @@
-export const FRIENDS_SUCCESS = 'friend_list_success';
-export const FRIENDS_FAIL = 'friend_list_fail';
-export const FRIENDS = 'friend_list';
-
-export const FRIEND_DETAILS_SUCCESS = 'friend_details_success';
-export const FRIEND_DETAILS_FAIL = 'friend_details_fail';
-export const FRIEND_DETAILS = 'friend_details';
-
-export const DEVICE_DATA_SUCCESS = 'device_data_success';
-export const DEVICE_DATA_FAIL = 'device_data_fail';
-export const DEVICE_DATA = 'device_data';
-
-export const DEVICE_TASK_SUCCESS = 'device_task_success';
-export const DEVICE_TASK_FAIL = 'device_task_fail';
-
 export const AUTHORIZED_USER = 'authorized_user';
-export const AUTH_SUCCESS = 'auth_success';
-export const AUTH_LOADING = 'auth_loading';
-export const AUTH_FAIL = 'auth_fail';
 
-export const SIGNUP_SUCCESS = 'auth_success';
-export const SIGNUP_LOADING = 'auth_loading';
-export const SIGNUP_FAIL = 'auth_fail';
+export const Auth = {
+    login: {
+        success: 'auth_success',
+        loading: 'auth_loading',
+        fail: 'auth_fail',
+    },
+    signup: {
+        success: 'auth_success',
+        loading: 'auth_loading',
+        fail: 'auth_fail',
+    }
+}
 
-export const DEVICES_SUCCESS = 'devices_list_success';
-export const DEVICES_FAIL = 'devices_list_fail';
-export const DEVICES = 'devices_list';
+export const Friend = {
+    list: {
+        success: 'friend_list_success',
+        fail: 'friend_list_fail',
+        default: 'friend_list'
+    },
+    details: {
+        success: 'friend_details_success',
+        fail: 'friend_details_fail',
+        default: 'friend_details'
+    }
+}
 
-export const DEVICE_ADD_FAIL = 'device_add_fail'
-export const DEVICE_ADD_SUCCESS = 'device_add_success'
-export const DEVICE_ADD_LOADING = 'device_add_loading'
-export const DEVICE_ADD_FAIL_ALREADY_ADDED = 'device_add_fail_already_ADDED'
-export const DEVICE_ADD_FAIL_NOT_FOUND = 'device_add_fail_not_found'
-
-export const DEVICE_REGISTER_FAIL = 'device_register_fail'
-export const DEVICE_REGISTER_SUCCESS = 'device_register_success'
-export const DEVICE_REGISTER_LOADING = 'device_register_loading'
-
-export const DEVICE_LOGIN_FAIL = 'device_login_fail'
-export const DEVICE_LOGIN_SUCCESS = 'device_login_success'
-export const DEVICE_LOGIN_LOADING = 'device_login_loading'
-
-export const DEVICE_SETUP_FAIL = 'device_setup_fail'
-export const DEVICE_SETUP_SUCCESS = 'device_setup_success'
-export const DEVICE_SETUP_LOADING = 'device_setup_loading'
+export const Device = {
+    add: {
+        fail: 'device_add_fail',
+        success: 'device_add_success',
+        loading: 'device_add_loading',
+        failExists: 'device_add_fail_already_added',
+        failNotFound: 'device_add_fail_not_found',
+    },
+    login: {
+        fail: 'device_login_fail',
+        success: 'device_login_success',
+        loading: 'device_login_loading'
+    },
+    register: {
+        fail: 'device_register_fail',
+        success: 'device_register_success',
+        loading: 'device_register_loading'
+    },
+    setup: {
+        fail: 'device_setup_fail',
+        success: 'device_setup_success',
+        loading: 'device_setup_loading',
+    },
+    list: {
+        success: 'device_list_success',
+        fail: 'device_list_fail',
+        default: 'device_list'
+    },
+    data: {
+        success: 'device_data_success',
+        fail: 'device_data_fail',
+        default: 'device_data',
+    },
+    task: {
+        success: 'device_task_success',
+        fail: 'device_task_fail',
+        default: 'device_task'
+    },
+    sensor: {
+        range: 'range',
+        airtemp: 'airtemp',
+        soiltemp: 'soiltemp',
+        humidity: 'humidity',
+        moisture: 'moisture'
+    }
+}

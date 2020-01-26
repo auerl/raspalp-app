@@ -1,19 +1,47 @@
-//export const RALP_API_BASE_URL= 'http://192.168.8.100:5000/v1';
-export const RALP_API_BASE_URL= 'http://api.hiddenpeak.org/v1';
-export const RALP_BOX_BASE_URL= 'http://192.168.50.5/v1';
+export const RALP_API_BASE_URL = 'http://api.hiddenpeak.org/v1';
+export const RALP_BOX_BASE_URL = 'http://192.168.8.120/v1';
 
+export const UserEndpoints = {
+    login: `${RALP_API_BASE_URL}/users/authorize`,
+    signup: `${RALP_API_BASE_URL}/users`,
+    getData: `${RALP_API_BASE_URL}/data/`,
+    getDetails: `${RALP_API_BASE_URL}/users/`,
+    listUsers: `${RALP_API_BASE_URL}/users`,
+    listDevices: `${RALP_API_BASE_URL}/users/listDevices`
+}
 
-export const USER_LOGIN_ENDPOINT =`${RALP_API_BASE_URL}/users/authorize`;
-export const USER_SIGNUP_ENDPOINT =`${RALP_API_BASE_URL}/users`;
-export const USER_LIST_DEVICES_ENDPOINT = `${RALP_API_BASE_URL}/users/listDevices`;
-export const USER_BASE_DATA_ENDPOINT = `${RALP_API_BASE_URL}/data/`;
-export const USER_LIST_USERS_ENDPOINT= `${RALP_API_BASE_URL}/users`;
-export const USER_DETAILS_ENDPOINT= `${RALP_API_BASE_URL}/users/`;
+export const DeviceEndpoints = {
+    addDevice: `${RALP_API_BASE_URL}/users/registerDevice`,
+    registerDevice: `${RALP_API_BASE_URL}/devices`,
+    login: `${RALP_API_BASE_URL}/devices/authorize`,
+    sendTask: `${RALP_API_BASE_URL}/devices/sendTask/`
+}
 
-export const DEVICE_ADD_ENDPOINT= `${RALP_API_BASE_URL}/users/registerDevice`;
-export const DEVICE_REGISTER_ENDPOINT= `${RALP_API_BASE_URL}/devices`;
-export const DEVICE_LOGIN_ENDPOINT= `${RALP_API_BASE_URL}/devices/authorize`;
-export const DEVICE_TASK_ENDPOINT= `${RALP_API_BASE_URL}/devices/sendTask/`;
+export const BoxEndpoints = {
+    updateToken: `${RALP_BOX_BASE_URL}/setup/token`,
+    updateWifi: `${RALP_BOX_BASE_URL}/setup/wifi`
+}
 
-export const BOX_UPDATE_TOKEN_ENDPOINT= `${RALP_BOX_BASE_URL}/setup/token`;
-export const BOX_UPDATE_WIFI_ENDPOINT= `${RALP_BOX_BASE_URL}/setup/wifi`;
+export const HttpStatus = {
+    ok: 200,
+    noContent: 204,
+    badRequest: 400,
+    forbidden: 403,
+    notFound: 404,
+    notAllowed: 405,
+    serverError: 500,
+    // custom
+    userNotFound: 21,
+    wrongPassword: 22,
+    deviceNotFound: 23,
+    deviceAlreadyAdded: 24,
+    userAlreadyExists: 25
+}
+
+export const RequestMethods = {
+    get: 'GET',
+    put: 'PUT',
+    post: 'POST',
+    patch: 'PATCH',
+    delete: 'DELETE'
+}

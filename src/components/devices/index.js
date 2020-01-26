@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { View, Text, TextInput, FlatList } from 'react-native';
+import { View, Text, TextInput, FlatList, ImageBackground } from 'react-native';
 import { connect } from 'react-redux';
 import { Actions } from 'react-native-router-flux';
 import { getUserDevices } from '../../actions/DevicesActions';
@@ -8,6 +8,8 @@ import { devicesStyle, itemStyle } from './style'
 import { Button } from 'react-native-elements';
 
 import { ListItem } from 'react-native-elements'
+
+import background from "../../../assets/tomato.png";
 
 class Devices extends Component {
 
@@ -72,6 +74,7 @@ class Devices extends Component {
     render() {
         const { containerStyle, searchViewStyle, loginText } = devicesStyle;
         return (
+          <ImageBackground source={background} style={{width: '100%', height: '100%'}}>
             <View style={containerStyle}>
                 {this.renderLoading()}
               <View style={{width: "60%", alignSelf: "center"}}>
@@ -82,6 +85,7 @@ class Devices extends Component {
                 </Button>
               </View>
             </View>
+          </ImageBackground>
         );
     }
 }
