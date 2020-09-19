@@ -234,9 +234,9 @@ class DeviceData extends Component {
       <ImageBackground source={background} style={{width: '100%', height: '100%'}}>
       <ScrollView style={containerStyle}>
         <DialogInput isDialogVisible={this.state.isDialogVisible}
-                     title={"Wassermenge eingeben"}
-                     message={"Bitte geben Sie die Wassermenge ein, mit der Sie bewässern möchten:"}
-                     hintInput ={"Liter"}
+                     title={"Bewässerungsdauer eingeben"}
+                     message={"Bitte geben Sie die Dauer in Minuten ein, für die Sie bewässern möchten:"}
+                     hintInput ={"Minuten"}
                      submitInput={ (liter) => {this.onSubmitJob(liter)} }
                      submitText={"Giessen"}
                      cancelText={"Abbrechen"}
