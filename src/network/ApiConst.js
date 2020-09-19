@@ -1,4 +1,4 @@
-export const RALP_API_BASE_URL = 'http://api.hiddenpeak.org/v1';
+export const RALP_API_BASE_URL = 'http://3.122.60.238/v1';
 export const RALP_BOX_BASE_URL = 'http://192.168.8.120/v1';
 
 export const UserEndpoints = {
