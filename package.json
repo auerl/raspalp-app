@@ -10,12 +10,12 @@
   "dependencies": {
     "@babel/core": "*",
     "axios": "^0.19.0",
-    "expo": "^34.0.1",
-    "expo-barcode-scanner": "^6.0.0",
+    "expo": "^38.0.0",
+    "expo-barcode-scanner": "~8.2.1",
     "prop-types": "> 15.6.0",
-    "react": "16.8.3",
-    "react-dom": "^16.8.6",
-    "react-native": "https://github.com/expo/react-native/archive/sdk-34.0.0.tar.gz",
+    "react": "16.11.0",
+    "react-dom": "16.11.0",
+    "react-native": "https://github.com/expo/react-native/archive/sdk-38.0.2.tar.gz",
     "react-native-camera": "^3.0.1",
     "react-native-chart-kit": "^3.2.0",
     "react-native-dialog-input": "^1.0.7",
@@ -23,10 +23,10 @@
     "react-native-highcharts": "^1.0.2",
     "react-native-pure-chart": "^0.0.24",
     "react-native-router-flux": "^4.0.6",
-    "react-native-svg": "^9.5.3",
+    "react-native-svg": "12.1.0",
     "react-native-svg-charts": "^5.3.0",
     "react-native-vector-icons": "^6.6.0",
-    "react-native-web": "^0.11.4",
+    "react-native-web": "~0.11.7",
     "react-redux": "^7.1.0",
     "redux": "^4.0.4",
     "redux-thunk": "^2.3.0",
@@ -34,7 +34,7 @@
     "utf8": "^3.0.0"
   },
   "devDependencies": {
-    "babel-preset-expo": "^6.0.0"
+    "babel-preset-expo": "^8.2.3"
   },
   "private": true
 }
